@@ -1,10 +1,11 @@
 const mysql = require('mysql2/promise');
+require('dotenv').config();
 
 const pool = mysql.createPool({
-    host: 'localhost',
-    user: 'root',           // xampp 기본 user
-    password: '',           // 기본 비번
-    database: 'user_db', // DB 이름
+    host: process.env.DB_HOST,         // .env에서 값 읽어옴
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
