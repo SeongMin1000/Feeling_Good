@@ -1,3 +1,9 @@
+// ✅ 1. 로그인 상태 확인
+if (!localStorage.getItem("token")) {
+  alert("로그인이 필요합니다.");
+  window.location.href = "login.html";
+}
+
 const jobData = [
   {
     name: "KGlobal Inc.",
@@ -30,6 +36,7 @@ const favoriteList = document.getElementById('favoriteList');
 let likedCompanies = new Set(JSON.parse(localStorage.getItem('favorites')) || []);
 let current = 0;
 
+// ✅ 2. 카드 렌더링
 function renderCards() {
   container.innerHTML = '';
   jobData.forEach((job, index) => {
@@ -53,6 +60,7 @@ function renderCards() {
   });
 }
 
+// ✅ 3. 관심 등록 렌더링
 function renderFavorites() {
   favoriteList.innerHTML = '';
   likedCompanies.forEach(company => {
@@ -80,6 +88,7 @@ function removeFavorite(companyName) {
   renderFavorites();
 }
 
+// ✅ 4. 카드 넘기기
 function nextCard() {
   const cards = document.querySelectorAll('.card');
   cards[current].classList.remove('active');
@@ -87,9 +96,11 @@ function nextCard() {
   cards[current].classList.add('active');
 }
 
+// ✅ 5. 화살표로 넘기기
 document.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowRight') nextCard();
 });
 
+// ✅ 6. 실행
 renderCards();
 renderFavorites();
