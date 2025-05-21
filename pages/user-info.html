@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>사용자 정보 입력</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <style>
+    select, input[type="email"], input[type="tel"] {
+      width: 100%;
+      padding: 0.6rem;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    fieldset {
+      border: none;
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+    fieldset legend {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>👤 사용자 정보 입력</h2>
+    <form id="userInfoForm">
+      <fieldset>
+        <legend>기본 정보</legend>
+        <input type="text" id="name" placeholder="이름 또는 닉네임" required />
+        <input type="number" id="age" placeholder="나이" required />
+        <input type="email" id="email" placeholder="이메일 주소" required />
+        <input type="tel" id="phone" placeholder="전화번호 (선택)" />
+      </fieldset>
+
+      <fieldset>
+        <legend>성별</legend>
+        <label><input type="radio" name="gender" value="남" required /> 남</label>
+        <label><input type="radio" name="gender" value="여" /> 여</label>
+        <label><input type="radio" name="gender" value="기타" /> 기타</label>
+      </fieldset>
+
+      <fieldset>
+        <legend>국적</legend>
+        <select id="nationality" required>
+          <option value="">국적 선택</option>
+          <option value="Aruba">Aruba</option>
+          <option value="Afghanistan">Afghanistan</option>
+          <option value="Angola">Angola</option>
+          <option value="Anguilla">Anguilla</option>
+          <option value="Åland Islands">Åland Islands</option>
+          <option value="Albania">Albania</option>
+          <option value="Andorra">Andorra</option>
+          <option value="United Arab Emirates">United Arab Emirates</option>
+          <option value="Argentina">Argentina</option>
+          <option value="Armenia">Armenia</option>
+          <option value="Australia">Australia</option>
+          <option value="Austria">Austria</option>
+          <option value="Azerbaijan">Azerbaijan</option>
+          <option value="Belgium">Belgium</option>
+          <option value="Brazil">Brazil</option>
+          <option value="Bangladesh">Bangladesh</option>
+          <option value="기타">기타</option>
+        </select>
+      </fieldset>
+
+      <fieldset>
+        <legend>비자 종류</legend>
+        <select id="visa" required>
+          <option value="">비자 선택</option>
+          <option value="E-9">E-9 (비전문 취업)</option>
+          <option value="D-4">D-4 (일반 연수)</option>
+          <option value="F-2">F-2 (거주)</option>
+          <option value="F-6">F-6 (결혼 이민)</option>
+          <option value="D-2">D-2 (유학)</option>
+          <option value="H-2">H-2 (방문 취업)</option>
+          <option value="G-1">G-1 (기타 체류)</option>
+          <option value="기타">기타</option>
+        </select>
+      </fieldset>
+
+      <fieldset>
+        <legend>거주 지역</legend>
+        <select id="location" required>
+          <option value="">지역 선택</option>
+          <option value="서울">서울</option>
+          <option value="경기">경기</option>
+          <option value="부산">부산</option>
+          <option value="대구">대구</option>
+          <option value="광주">광주</option>
+          <option value="인천">인천</option>
+          <option value="제주">제주</option>
+          <option value="기타">기타</option>
+        </select>
+      </fieldset>
+
+      <fieldset>
+        <legend>선호 언어</legend>
+        <select id="language" required>
+          <option value="">언어 선택</option>
+          <option value="한국어">한국어</option>
+          <option value="영어">영어</option>
+          <option value="베트남어">베트남어</option>
+          <option value="중국어">중국어</option>
+          <option value="우즈벡어">우즈벡어</option>
+        </select>
+      </fieldset>
+
+      <button type="submit">정보 저장하고 시작하기</button>
+    </form>
+  </div>
+
+  <script src="../js/user-info.js"></script>
+</body>
+</html>
