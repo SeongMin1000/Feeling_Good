@@ -16,9 +16,9 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
     document.getElementById("loginResult").textContent = data.message;
 
     if (res.ok) {
-      localStorage.setItem("token", data.token); // ✅ 토큰 저장
+      // localStorage.setItem("token", data.token); // 백엔드에서 토큰 보낼 때만 사용
       alert("로그인 성공!");
-      window.location.href = "user-info.html";        // ✅ 페이지 이동
+      window.location.href = "user-info.html";
     }
   } catch (error) {
     console.error("로그인 오류:", error);
