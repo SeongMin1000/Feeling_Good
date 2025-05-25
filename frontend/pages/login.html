@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>로그인</title>
-  <link rel="stylesheet" href="/css/style.css"> <!-- 🔧 고침 -->
+  <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
   <div class="container">
@@ -15,7 +15,14 @@
       <button type="submit">로그인</button>
     </form>
     <p id="loginResult"></p>
+
+    <!-- ✅ 회원가입 버튼 구분 -->
+    <div style="margin-top: 1.5rem;">
+      <button onclick="location.href='register.html'">🙋 일반 회원가입</button>
+      <button onclick="location.href='register-company.html'" style="margin-left: 0.5rem;">🏢 기업 회원가입</button>
+    </div>
   </div>
-  <script src="/js/login.js"></script> <!-- 🔧 고침 -->
+
+  <script src="../js/login.js"></script>
 </body>
 </html>
