@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>기업 회원가입</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <style>
+    select, input[type="text"], input[type="password"], input[type="url"] {
+      width: 100%;
+      padding: 0.6rem;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    fieldset {
+      border: none;
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+    fieldset legend {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🏢 기업 회원가입</h2>
+    <form id="registerCompanyForm">
+      <!-- ✅ 계정 정보 -->
+      <fieldset>
+        <legend>기업 계정 정보</legend>
+        <input type="text" id="companyId" placeholder="아이디" required />
+        <input type="password" id="companyPassword" placeholder="비밀번호" required />
+      </fieldset>
+
+      <!-- ✅ 기업 정보 -->
+      <fieldset>
+        <legend>기업 정보</legend>
+        <input type="text" id="companyName" placeholder="기업명" required />
+        <input type="text" id="companyAddress" placeholder="회사 주소" required />
+        <select id="industry">
+            <option value="">업종 선택 (선택사항)</option>
+            <option value="IT">IT</option>
+            <option value="제조">제조</option>
+            <option value="건설">건설</option>
+            <option value="교육">교육</option>
+            <option value="유통">유통</option>
+            <option value="기타">기타</option>
+          </select>
+        <input type="url" id="companyWebsite" placeholder="웹사이트 주소 (예: https://example.com)" />
+      </fieldset>
+
+      <button type="submit">기업 등록하기</button>
+      <p id="companyRegisterResult"></p>
+    </form>
+  </div>
+
+  <script src="../js/register-company.js"></script>
+</body>
+</html>
