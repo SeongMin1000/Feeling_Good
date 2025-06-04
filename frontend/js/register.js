@@ -21,7 +21,7 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
     const workExperience = document.getElementById('workExperience').value;
 
     try {
-        const response = await fetch('http://localhost:5000/api/users/register', {
+        const response = await fetch('http://localhost:5000/user/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

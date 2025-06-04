@@ -7,7 +7,7 @@ require('dotenv').config({ path: path.join(__dirname, '../../.env') });
 
 
 // 라우터 import
-const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 // 기본 포트 설정
 const PORT = process.env.PORT;
@@ -17,7 +17,7 @@ app.use(cors()); // 🔹 프론트엔드 요청 허용
 app.use(express.json()); // 🔹 JSON 파싱
 
 // 라우터 등록
-app.use('/auth', authRoutes);
+app.use('/user', userRoutes);
 
 // 정적 파일 폴더 등록 (frontend)
 app.use(express.static(path.join(__dirname, '../../frontend/pages')));
