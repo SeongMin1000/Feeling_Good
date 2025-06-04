@@ -148,8 +148,15 @@
       margin: 0 auto;
       padding: 0 2rem;
       display: flex;
-      gap: 1rem;
+      justify-content: space-between;
       align-items: center;
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 1rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
     }
 
     .filter-button {
@@ -167,6 +174,108 @@
       background-color: var(--primary-color);
       border-color: var(--primary-color);
       color: white;
+    }
+
+    .advanced-filter-toggle {
+      background: none;
+      border: 1px solid var(--primary-color);
+      color: var(--primary-color);
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .advanced-filter-toggle:hover {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    .advanced-filters {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      display: none;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .advanced-filters.show {
+      display: block;
+    }
+
+    .advanced-filter-content {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .filter-column h4 {
+      margin: 0 0 1rem 0;
+      color: var(--text-primary);
+      font-size: 1rem;
+    }
+
+    .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .checkbox-group label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      border: 1px solid var(--border-color);
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .language-section {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .language-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .language-row span {
+      width: 60px;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .language-row select {
+      flex: 1;
+      padding: 0.5rem;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .filter-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-color);
     }
 
     .main-content {
@@ -438,6 +547,12 @@
       transition: width 0.3s ease;
     }
 
+    @media (max-width: 1024px) {
+      .advanced-filter-content {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
     @media (max-width: 768px) {
       .header-top {
         display: none;
@@ -462,12 +577,20 @@
       }
 
       .filter-content {
-        overflow-x: auto;
-        padding: 0 1rem;
+        flex-direction: column;
+        gap: 1rem;
       }
 
-      .filter-button {
-        white-space: nowrap;
+      .filter-group {
+        width: 100%;
+      }
+
+      .advanced-filter-content {
+        grid-template-columns: 1fr;
+      }
+
+      .advanced-filters {
+        padding: 1rem;
       }
 
       .card-container {
@@ -516,13 +639,80 @@
     </div>
     <div class="filter-section">
       <div class="filter-content">
-        <button class="filter-button active" data-filter="all">전체</button>
-        <button class="filter-button" data-filter="it">IT/개발</button>
-        <button class="filter-button" data-filter="education">교육</button>
-        <button class="filter-button" data-filter="trade">무역/사무</button>
-        <button class="filter-button" data-filter="manufacture">제조/생산</button>
-        <button class="filter-button" data-filter="service">서비스</button>
-        <button class="filter-button" data-filter="design">디자인</button>
+        <div class="filter-group">
+          <button class="filter-button active" data-filter="all">전체</button>
+          <button class="filter-button" data-filter="it">IT/개발</button>
+          <button class="filter-button" data-filter="education">교육</button>
+          <button class="filter-button" data-filter="trade">무역/사무</button>
+          <button class="filter-button" data-filter="manufacture">제조/생산</button>
+          <button class="filter-button" data-filter="service">서비스</button>
+          <button class="filter-button" data-filter="design">디자인</button>
+        </div>
+        <button class="advanced-filter-toggle">
+          <i class="fas fa-sliders-h"></i> 상세 검색
+        </button>
+      </div>
+      <div class="advanced-filters">
+        <div class="advanced-filter-content">
+          <div class="filter-column">
+            <h4>고용형태</h4>
+            <div class="checkbox-group">
+              <label><input type="checkbox" name="employment" value="정규직"> 정규직</label>
+              <label><input type="checkbox" name="employment" value="계약직"> 계약직</label>
+              <label><input type="checkbox" name="employment" value="파견직"> 파견직</label>
+              <label><input type="checkbox" name="employment" value="인턴"> 인턴</label>
+            </div>
+          </div>
+          <div class="filter-column">
+            <h4>급여</h4>
+            <div class="checkbox-group">
+              <label><input type="checkbox" name="salary" value="2000-3000"> 2,000~3,000만원</label>
+              <label><input type="checkbox" name="salary" value="3000-4000"> 3,000~4,000만원</label>
+              <label><input type="checkbox" name="salary" value="4000-5000"> 4,000~5,000만원</label>
+              <label><input type="checkbox" name="salary" value="5000+"> 5,000만원 이상</label>
+            </div>
+          </div>
+          <div class="filter-column">
+            <h4>비자종류</h4>
+            <div class="checkbox-group">
+              <label><input type="checkbox" name="visa" value="E-7"> E-7 (특정활동)</label>
+              <label><input type="checkbox" name="visa" value="E-9"> E-9 (비전문취업)</label>
+              <label><input type="checkbox" name="visa" value="E-2"> E-2 (회화지도)</label>
+              <label><input type="checkbox" name="visa" value="F-2"> F-2 (거주)</label>
+              <label><input type="checkbox" name="visa" value="F-4"> F-4 (재외동포)</label>
+              <label><input type="checkbox" name="visa" value="F-6"> F-6 (결혼이민)</label>
+            </div>
+          </div>
+          <div class="filter-column">
+            <h4>언어수준</h4>
+            <div class="language-section">
+              <div class="language-row">
+                <span>한국어</span>
+                <select name="korean-level">
+                  <option value="">무관</option>
+                  <option value="basic">기초</option>
+                  <option value="intermediate">중급</option>
+                  <option value="advanced">고급</option>
+                  <option value="native">원어민</option>
+                </select>
+              </div>
+              <div class="language-row">
+                <span>영어</span>
+                <select name="english-level">
+                  <option value="">무관</option>
+                  <option value="basic">기초</option>
+                  <option value="intermediate">중급</option>
+                  <option value="advanced">고급</option>
+                  <option value="native">원어민</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="filter-actions">
+          <button class="btn btn-outline" onclick="resetFilters()">초기화</button>
+          <button class="btn btn-primary" onclick="applyFilters()">적용하기</button>
+        </div>
       </div>
     </div>
   </header>

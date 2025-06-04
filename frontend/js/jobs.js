@@ -208,28 +208,143 @@ const progressBar = document.getElementById('progress');
 const favoriteCount = document.getElementById('favoriteCount');
 let likedCompanies = new Set(JSON.parse(localStorage.getItem('favorites')) || []);
 
-// 필터 초기화 및 이벤트 리스너 설정
-function initializeFilters() {
-    const filterButtons = document.querySelectorAll('.filter-button');
-    filterButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            // 활성화된 버튼 스타일 변경
-            filterButtons.forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
+// 상세 필터 토글
+document.querySelector('.advanced-filter-toggle').addEventListener('click', function() {
+    document.querySelector('.advanced-filters').classList.toggle('show');
+});
 
-            // 필터링 적용
+// 필터 초기화
+function resetFilters() {
+    // 체크박스 초기화
+    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.checked = false;
+    });
+
+    // 셀렉트 박스 초기화
+    document.querySelectorAll('select').forEach(select => {
+        select.value = '';
+    });
+
+    // 직종 필터 초기화
+    document.querySelectorAll('.filter-button').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.querySelector('.filter-button[data-filter="all"]').classList.add('active');
+
+    // 카드 리스트 초기화
+    filteredJobs = [...jobData];
+    current = 0;
+    renderCards();
+}
+
+// 필터 적용
+function applyFilters() {
+    // 선택된 직종
+    const activeCategory = document.querySelector('.filter-button.active').dataset.filter;
+
+    // 선택된 고용형태
+    const selectedEmployment = Array.from(document.querySelectorAll('input[name="employment"]:checked'))
+        .map(checkbox => checkbox.value);
+
+    // 선택된 급여 범위
+    const selectedSalary = Array.from(document.querySelectorAll('input[name="salary"]:checked'))
+        .map(checkbox => checkbox.value);
+
+    // 선택된 비자 종류
+    const selectedVisa = Array.from(document.querySelectorAll('input[name="visa"]:checked'))
+        .map(checkbox => checkbox.value);
+
+    // 선택된 언어 수준
+    const koreanLevel = document.querySelector('select[name="korean-level"]').value;
+    const englishLevel = document.querySelector('select[name="english-level"]').value;
+
+    // 필터링 적용
+    filteredJobs = jobData.filter(job => {
+        // 직종 필터
+        if (activeCategory !== 'all' && job.category !== activeCategory) {
+            return false;
+        }
+
+        // 고용형태 필터
+        if (selectedEmployment.length > 0 && !selectedEmployment.includes(job.type)) {
+            return false;
+        }
+
+        // 급여 필터
+        if (selectedSalary.length > 0) {
+            const salary = parseInt(job.salary.replace(/[^0-9]/g, ''));
+            const matchesSalary = selectedSalary.some(range => {
+                const [min, max] = range.split('-').map(Number);
+                if (range === '5000+') {
+                    return salary >= 5000;
+                }
+                return salary >= min && salary <= max;
+            });
+            if (!matchesSalary) {
+                return false;
+            }
+        }
+
+        // 비자 필터
+        if (selectedVisa.length > 0) {
+            const jobVisa = job.visa.split(' ')[0]; // "E-7 비자 지원" -> "E-7"
+            if (!selectedVisa.includes(jobVisa)) {
+                return false;
+            }
+        }
+
+        // 언어 수준 필터 (실제 데이터에 언어 수준이 추가되면 구현)
+        // if (koreanLevel && job.koreanLevel < koreanLevel) return false;
+        // if (englishLevel && job.englishLevel < englishLevel) return false;
+
+        return true;
+    });
+
+    // 결과가 없는 경우
+    if (filteredJobs.length === 0) {
+        showToast('검색 결과가 없습니다. 필터 조건을 변경해보세요.');
+        return;
+    }
+
+    // 필터링된 결과 표시
+    current = 0;
+    renderCards();
+    
+    // 필터 패널 닫기
+    document.querySelector('.advanced-filters').classList.remove('show');
+    
+    // 검색 결과 수 표시
+    showToast(`${filteredJobs.length}개의 채용정보를 찾았습니다.`);
+}
+
+// 직종 필터 이벤트 리스너
+document.querySelectorAll('.filter-button').forEach(button => {
+    button.addEventListener('click', () => {
+        // 이미 선택된 버튼을 다시 클릭한 경우 무시
+        if (button.classList.contains('active')) return;
+
+        // 버튼 활성화 상태 변경
+        document.querySelectorAll('.filter-button').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        button.classList.add('active');
+
+        // 다른 필터가 적용되어 있는 경우 전체 필터 적용
+        if (document.querySelector('input[type="checkbox"]:checked') || 
+            document.querySelector('select[name="korean-level"]').value || 
+            document.querySelector('select[name="english-level"]').value) {
+            applyFilters();
+        } else {
+            // 직종 필터만 적용
             const filter = button.dataset.filter;
             filteredJobs = filter === 'all' 
                 ? [...jobData]
                 : jobData.filter(job => job.category === filter);
-            
-            // 카드 초기화 및 다시 렌더링
             current = 0;
             renderCards();
-            updateProgress();
-        });
+        }
     });
-}
+});
 
 // 카드 렌더링
 function renderCards() {
@@ -417,7 +532,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'login.html';
         return;
     }
-    initializeFilters();
+    resetFilters();
 });
 
 // 초기 렌더링
