@@ -39,20 +39,32 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         // 사용자 정보 가져오기
         const response = await fetch('http://localhost:5000/api/users/profile', {
+            method: 'GET',
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
             }
         });
 
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            throw new Error('서버에서 잘못된 응답 형식이 반환되었습니다.');
+        }
+
         if (!response.ok) {
-            throw new Error('사용자 정보를 가져오는데 실패했습니다.');
+            const errorData = await response.json();
+            throw new Error(errorData.message || '사용자 정보를 가져오는데 실패했습니다.');
         }
 
         const userData = await response.json();
         displayUserInfo(userData);
     } catch (error) {
         console.error('Error:', error);
-        alert('사용자 정보를 불러오는데 실패했습니다.');
+        alert(error.message || '사용자 정보를 불러오는데 실패했습니다.');
+        // 인증 오류시 로그인 페이지로 리다이렉트
+        if (error.message.includes('토큰') || error.message.includes('인증')) {
+            window.location.href = 'login.html';
+        }
     }
 });
 
