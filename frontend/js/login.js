@@ -1,42 +1,35 @@
 document.getElementById("loginForm").addEventListener("submit", async function(e) {
   e.preventDefault();
 
-  const username = document.getElementById("username").value;
+  const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
   try {
-    const res = await fetch("http://localhost:5000/auth/login", {
+    const response = await fetch("http://localhost:5000/api/users/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ username, password })
+      body: JSON.stringify({
+        email,
+        password
+      })
     });
 
-    const data = await res.json();
-    document.getElementById("loginResult").textContent = data.message;
+    const data = await response.json();
 
-    if (res.ok) {
-      alert("로그인 성공!");
-      localStorage.setItem("currentUser", username);
-
-      // ✅ 사용자 정보 여부에 따라 분기
-      const personalInfo = localStorage.getItem(`userInfo_${username}`);
-      const companyInfo = localStorage.getItem(`companyInfo_${username}`);
-
-      if (companyInfo) {
-        // 기업 회원 → 기업 전용 메인 페이지로
-        window.location.href = "company-dashboard.html";
-      } else if (personalInfo) {
-        // 일반 사용자 → 구직자 메인 페이지로
-        window.location.href = "jobs.html";
-      } else {
-        // 첫 로그인 사용자 → 사용자 정보 입력 (기존 방식 유지)
-        window.location.href = "register.html";
-      }
+    if (response.ok) {
+      // 토큰을 로컬 스토리지에 저장
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      
+      alert("로그인 성공! 메인 페이지로 이동합니다.");
+      window.location.href = "jobs.html";
+    } else {
+      alert(data.message || "로그인 중 오류가 발생했습니다.");
     }
   } catch (error) {
-    console.error("로그인 오류:", error);
-    document.getElementById("loginResult").textContent = "서버 연결 실패";
+    console.error("Error:", error);
+    alert("서버 오류가 발생했습니다.");
   }
 });

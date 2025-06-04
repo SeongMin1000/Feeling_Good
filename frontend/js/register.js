@@ -1,46 +1,63 @@
-document.getElementById("registerForm").addEventListener("submit", async function(e) {
-  e.preventDefault();
+document.getElementById('registerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-  // ✅ 계정 정보
-  const username = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
+    // 필수 입력 필드
+    const username = document.getElementById('username').value;
+    const age = document.getElementById('age').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const nationality = document.getElementById('nationality').value;
+    const visaType = document.getElementById('visaType').value;
+    const currentLocation = document.getElementById('currentLocation').value;
+    const preferredLanguage = document.getElementById('preferredLanguage').value;
+    const desiredIndustry = document.getElementById('desiredIndustry').value;
 
-  // ✅ 사용자 정보
-  const info = {
-    name: document.getElementById("name").value,
-    age: document.getElementById("age").value,
-    email: document.getElementById("email").value,
-    phone: document.getElementById("phone").value,
-    gender: document.querySelector('input[name="gender"]:checked')?.value,
-    nationality: document.getElementById("nationality").value,
-    visa: document.getElementById("visa").value,
-    location: document.getElementById("location").value,
-    language: document.getElementById("language").value
-  };
+    // 선택 입력 필드
+    const gender = document.getElementById('gender').value;
+    const phone = document.getElementById('phone').value;
+    const visaExpiry = document.getElementById('visaExpiry').value;
+    const workType = document.getElementById('workType').value;
+    const koreanLevel = document.getElementById('koreanLevel').value;
+    const workExperience = document.getElementById('workExperience').value;
 
-  try {
-    // ✅ 1. 백엔드로 회원가입 요청
-    const res = await fetch("http://localhost:5000/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password })
-    });
+    try {
+        const response = await fetch('http://localhost:5000/api/users/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                // 필수 정보
+                username,
+                age,
+                email,
+                password,
+                nationality,
+                visaType,
+                currentLocation,
+                preferredLanguage,
+                desiredIndustry,
+                
+                // 선택 정보
+                gender,
+                phone,
+                visaExpiry,
+                workType,
+                koreanLevel,
+                workExperience
+            })
+        });
 
-    const data = await res.json();
-    document.getElementById("registerResult").textContent = data.message;
+        const data = await response.json();
 
-    if (res.ok) {
-      alert("회원가입 및 정보 입력 완료!");
-
-      // ✅ 2. currentUser 설정 및 userInfo 저장
-      localStorage.setItem("currentUser", username);
-      localStorage.setItem(`userInfo_${username}`, JSON.stringify(info));
-
-      // ✅ 3. 메인 페이지로 이동
-      window.location.href = "jobs.html";
+        if (response.ok) {
+            alert('회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.');
+            window.location.href = 'login.html';
+        } else {
+            alert(data.message || '회원가입 중 오류가 발생했습니다.');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('서버 오류가 발생했습니다.');
     }
-  } catch (error) {
-    console.error("회원가입 오류:", error);
-    document.getElementById("registerResult").textContent = "서버 연결 실패";
-  }
-});
+}); 
