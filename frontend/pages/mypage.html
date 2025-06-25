@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,7 +17,7 @@
             border-radius: 8px;
             padding: 2rem;
             margin-bottom: 2rem;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .profile-section h2 {
@@ -45,7 +44,7 @@
             color: #333;
         }
 
-        .edit-button {
+        .back-button {
             background-color: #4CAF50;
             color: white;
             padding: 0.8rem 1.5rem;
@@ -56,16 +55,15 @@
             margin-top: 1rem;
         }
 
-        .edit-button:hover {
+        .back-button:hover {
             background-color: #45a049;
         }
     </style>
 </head>
-
 <body>
     <div class="profile-container">
         <h1>마이페이지</h1>
-
+        
         <!-- 기본 정보 섹션 -->
         <div class="profile-section">
             <h2>기본 정보</h2>
@@ -147,12 +145,9 @@
             </div>
         </div>
 
-        <button class="edit-button" onclick="location.href='edit-profile.html'">프로필 수정</button>
-        <button class="edit-button" onclick="logout()"
-            style="background-color: #f44336; margin-left: 10px;">로그아웃</button>
+        <button class="back-button" onclick="window.history.back()">이전 페이지</button>
     </div>
 
     <script src="../js/mypage.js"></script>
 </body>
-
 </html>
