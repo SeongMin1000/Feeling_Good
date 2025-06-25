@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
   <meta charset="UTF-8" />
-  <title>회원가입</title>
-  <link rel="stylesheet" href="../css/style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원가입 - Feeling Good</title>
+  <link rel="stylesheet" href="../css/auth.css" />
   <style>
-    select, input[type="email"], input[type="tel"] {
+    select,
+    input[type="email"],
+    input[type="tel"] {
       width: 100%;
       padding: 0.6rem;
       margin-bottom: 1rem;
@@ -13,103 +17,179 @@
       border: 1px solid #ccc;
       border-radius: 6px;
     }
+
     fieldset {
       border: none;
       margin-bottom: 1.5rem;
       text-align: left;
     }
+
     fieldset legend {
       font-weight: bold;
       margin-bottom: 0.5rem;
       display: block;
     }
+
     label {
       display: block;
       margin-bottom: 0.5rem;
     }
   </style>
 </head>
-<body>
-  <div class="container">
-    <h2>📝 회원가입 및 정보입력</h2>
-    <form id="registerForm">
-      <!-- ✅ 계정 정보 -->
-      <fieldset>
-        <legend>계정 정보</legend>
-        <input type="text" id="username" placeholder="아이디" required />
-        <input type="password" id="password" placeholder="비밀번호" required />
-      </fieldset>
 
-      <!-- ✅ 사용자 정보 -->
+<body>
+  <div class="auth-container">
+    <h1>회원가입</h1>
+    <form id="registerForm" class="auth-form">
+      <!-- 기본 정보 -->
       <fieldset>
         <legend>기본 정보</legend>
-        <input type="text" id="name" placeholder="이름 또는 닉네임" required />
-        <input type="number" id="age" placeholder="나이" required />
-        <input type="email" id="email" placeholder="이메일 주소" required />
-        <input type="tel" id="phone" placeholder="전화번호 (선택)" />
+        <div class="form-group">
+          <label for="username">이름/닉네임 *</label>
+          <input type="text" id="username" name="username" required />
+        </div>
+        <div class="form-group">
+          <label for="age">나이 *</label>
+          <input type="number" id="age" name="age" required />
+        </div>
+        <div class="form-group">
+          <label for="gender">성별</label>
+          <select id="gender" name="gender">
+            <option value="">선택하세요</option>
+            <option value="남성">남성</option>
+            <option value="여성">여성</option>
+            <option value="기타">기타</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="email">이메일 *</label>
+          <input type="email" id="email" name="email" required />
+        </div>
+        <div class="form-group">
+          <label for="phone">전화번호</label>
+          <input type="tel" id="phone" name="phone" />
+        </div>
+        <div class="form-group">
+          <label for="password">비밀번호 *</label>
+          <input type="password" id="password" name="password" required />
+        </div>
       </fieldset>
 
+      <!-- 체류 정보 -->
       <fieldset>
-        <legend>성별</legend>
-        <label><input type="radio" name="gender" value="남" required /> 남</label>
-        <label><input type="radio" name="gender" value="여" /> 여</label>
-        <label><input type="radio" name="gender" value="기타" /> 기타</label>
+        <legend>체류 정보</legend>
+        <div class="form-group">
+          <label for="nationality">국적 *</label>
+          <select id="nationality" name="nationality" required>
+            <option value="">선택하세요</option>
+            <option value="베트남">베트남</option>
+            <option value="중국">중국</option>
+            <option value="필리핀">필리핀</option>
+            <option value="태국">태국</option>
+            <option value="우즈베키스탄">우즈베키스탄</option>
+            <option value="기타">기타</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="visaType">비자 종류 *</label>
+          <select id="visaType" name="visaType" required>
+            <option value="">선택하세요</option>
+            <option value="E-9">E-9 (비전문취업)</option>
+            <option value="D-4">D-4 (일반연수)</option>
+            <option value="F-2">F-2 (거주)</option>
+            <option value="F-4">F-4 (재외동포)</option>
+            <option value="F-6">F-6 (결혼이민)</option>
+            <option value="H-2">H-2 (방문취업)</option>
+            <option value="기타">기타</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="visaExpiry">비자 만료일</label>
+          <input type="date" id="visaExpiry" name="visaExpiry" />
+        </div>
       </fieldset>
 
+      <!-- 거주/근무 조건 -->
       <fieldset>
-        <legend>국적</legend>
-        <select id="nationality" required>
-          <option value="">국적 선택</option>
-          <option value="한국">한국</option>
-          <option value="베트남">베트남</option>
-          <option value="중국">중국</option>
-          <option value="우즈베키스탄">우즈베키스탄</option>
-          <option value="기타">기타</option>
-        </select>
+        <legend>거주/근무 조건</legend>
+        <div class="form-group">
+          <label for="currentLocation">현재 거주 지역 *</label>
+          <select id="currentLocation" name="currentLocation" required>
+            <option value="">선택하세요</option>
+            <option value="서울">서울</option>
+            <option value="경기">경기</option>
+            <option value="인천">인천</option>
+            <option value="부산">부산</option>
+            <option value="대구">대구</option>
+            <option value="광주">광주</option>
+            <option value="대전">대전</option>
+            <option value="울산">울산</option>
+            <option value="기타">기타</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="workType">희망 근무형태</label>
+          <select id="workType" name="workType">
+            <option value="">선택하세요</option>
+            <option value="풀타임">풀타임</option>
+            <option value="파트타임">파트타임</option>
+            <option value="교대근무">교대근무</option>
+          </select>
+        </div>
       </fieldset>
 
+      <!-- 언어 정보 -->
       <fieldset>
-        <legend>비자 종류</legend>
-        <select id="visa" required>
-          <option value="">비자 선택</option>
-          <option value="E-9">E-9 (비전문 취업)</option>
-          <option value="D-4">D-4 (일반 연수)</option>
-          <option value="F-2">F-2 (거주)</option>
-          <option value="F-6">F-6 (결혼 이민)</option>
-          <option value="H-2">H-2 (방문 취업)</option>
-          <option value="기타">기타</option>
-        </select>
+        <legend>언어 정보</legend>
+        <div class="form-group">
+          <label for="preferredLanguage">선호 UI 언어 *</label>
+          <select id="preferredLanguage" name="preferredLanguage" required>
+            <option value="">선택하세요</option>
+            <option value="한국어">한국어</option>
+            <option value="영어">영어</option>
+            <option value="베트남어">베트남어</option>
+            <option value="중국어">중국어</option>
+            <option value="우즈베크어">우즈베크어</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="koreanLevel">한국어 능력</label>
+          <select id="koreanLevel" name="koreanLevel">
+            <option value="">선택하세요</option>
+            <option value="상">상</option>
+            <option value="중">중</option>
+            <option value="하">하</option>
+          </select>
+        </div>
       </fieldset>
 
+      <!-- 직무/경력 정보 -->
       <fieldset>
-        <legend>거주 지역</legend>
-        <select id="location" required>
-          <option value="">지역 선택</option>
-          <option value="서울">서울</option>
-          <option value="부산">부산</option>
-          <option value="인천">인천</option>
-          <option value="광주">광주</option>
-          <option value="기타">기타</option>
-        </select>
+        <legend>직무/경력 정보</legend>
+        <div class="form-group">
+          <label for="desiredIndustry">희망 직종/산업군 *</label>
+          <select id="desiredIndustry" name="desiredIndustry" required>
+            <option value="">선택하세요</option>
+            <option value="제조업">제조업</option>
+            <option value="건설업">건설업</option>
+            <option value="농축산업">농축산업</option>
+            <option value="어업">어업</option>
+            <option value="서비스업">서비스업</option>
+            <option value="기타">기타</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="workExperience">직무 경력</label>
+          <textarea id="workExperience" name="workExperience" rows="3"></textarea>
+        </div>
       </fieldset>
 
-      <fieldset>
-        <legend>선호 언어</legend>
-        <select id="language" required>
-          <option value="">언어 선택</option>
-          <option value="한국어">한국어</option>
-          <option value="영어">영어</option>
-          <option value="중국어">중국어</option>
-          <option value="베트남어">베트남어</option>
-          <option value="우즈벡어">우즈벡어</option>
-        </select>
-      </fieldset>
-
-      <button type="submit">가입하고 시작하기</button>
-      <p id="registerResult"></p>
+      <button type="submit" class="auth-button">회원가입</button>
     </form>
+    <p class="auth-link">이미 계정이 있으신가요? <a href="login.html">로그인하기</a></p>
   </div>
 
   <script src="../js/register.js"></script>
 </body>
+
 </html>
