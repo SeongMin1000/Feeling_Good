@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>회원가입 - Feeling Good</title>
   <link rel="stylesheet" href="../css/auth.css" />
   <style>
-    select, input[type="email"], input[type="tel"] {
+    select,
+    input[type="email"],
+    input[type="tel"] {
       width: 100%;
       padding: 0.6rem;
       margin-bottom: 1rem;
@@ -14,22 +17,26 @@
       border: 1px solid #ccc;
       border-radius: 6px;
     }
+
     fieldset {
       border: none;
       margin-bottom: 1.5rem;
       text-align: left;
     }
+
     fieldset legend {
       font-weight: bold;
       margin-bottom: 0.5rem;
       display: block;
     }
+
     label {
       display: block;
       margin-bottom: 0.5rem;
     }
   </style>
 </head>
+
 <body>
   <div class="auth-container">
     <h1>회원가입</h1>
@@ -49,8 +56,8 @@
           <label for="gender">성별</label>
           <select id="gender" name="gender">
             <option value="">선택하세요</option>
-            <option value="남">남성</option>
-            <option value="여">여성</option>
+            <option value="남성">남성</option>
+            <option value="여성">여성</option>
             <option value="기타">기타</option>
           </select>
         </div>
@@ -184,4 +191,5 @@
 
   <script src="../js/register.js"></script>
 </body>
+
 </html>
