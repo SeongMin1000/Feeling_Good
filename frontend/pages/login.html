@@ -6,25 +6,49 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>로그인 - Feeling Good</title>
   <link rel="stylesheet" href="../css/login.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 
 <body>
   <div class="auth-container">
-    <h1>로그인</h1>
+    <!-- 언어 선택 버튼 -->
+    <div style="position: absolute; top: 20px; right: 20px;">
+      <a href="#" id="languageSelector" style="color: #666; text-decoration: none; font-size: 14px;">
+        <i class="fas fa-globe"></i> <span data-translate="Language">Language</span>
+      </a>
+    </div>
+
+    <h1 data-translate="로그인">로그인</h1>
     <form id="loginForm" class="auth-form">
       <div class="form-group">
-        <label for="email">이메일</label>
-        <input type="email" id="email" name="email" required>
+        <label for="email" data-translate="이메일">이메일</label>
+        <input type="email" id="email" name="email" required placeholder="이메일을 입력하세요"
+          data-translate-placeholder="이메일을 입력하세요">
       </div>
       <div class="form-group">
-        <label for="password">비밀번호</label>
-        <input type="password" id="password" name="password" required>
+        <label for="password" data-translate="비밀번호">비밀번호</label>
+        <input type="password" id="password" name="password" required placeholder="비밀번호를 입력하세요"
+          data-translate-placeholder="비밀번호를 입력하세요">
       </div>
-      <button type="submit" class="auth-button">로그인</button>
+      <button type="submit" class="auth-button" data-translate="로그인">로그인</button>
     </form>
-    <p class="auth-link">계정이 없으신가요? <a href="register.html">회원가입하기</a></p>
+    <p class="auth-link">
+      <span data-translate="계정이 없으신가요?">계정이 없으신가요?</span>
+      <a href="register.html" data-translate="회원가입하기">회원가입하기</a>
+    </p>
   </div>
+
+  <script src="../js/translate.js"></script>
   <script src="../js/login.js"></script>
+  <script>
+    // 페이지 로드 시 언어 선택 기능 연결
+    document.addEventListener('DOMContentLoaded', () => {
+      const languageButton = document.getElementById('languageSelector');
+      if (languageButton) {
+        window.translator.attachLanguageSelector(languageButton);
+      }
+    });
+  </script>
 </body>
 
 </html>

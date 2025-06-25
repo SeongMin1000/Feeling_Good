@@ -7,17 +7,25 @@
     <title>마이페이지 - Feeling Good</title>
     <link rel="stylesheet" href="../css/login.css">
     <link rel="stylesheet" href="../css/mypage.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 
 <body>
     <div class="profile-container">
-        <h1>마이페이지</h1>
+        <!-- 언어 선택 버튼 -->
+        <div style="position: absolute; top: 20px; right: 20px;">
+            <a href="#" id="languageSelector" style="color: #666; text-decoration: none; font-size: 14px;">
+                <i class="fas fa-globe"></i> <span data-translate="Language">Language</span>
+            </a>
+        </div>
+
+        <h1 data-translate="마이페이지">마이페이지</h1>
 
         <!-- 기본 정보 섹션 -->
         <div class="profile-section">
-            <h2>기본 정보</h2>
+            <h2 data-translate="기본 정보">기본 정보</h2>
             <div class="info-group">
-                <span class="info-label">이름/닉네임</span>
+                <span class="info-label" data-translate="이름/닉네임">이름/닉네임</span>
                 <span class="info-value" id="username"></span>
             </div>
             <div class="info-group">
@@ -94,10 +102,20 @@
             </div>
         </div>
 
-        <button class="back-button" onclick="goBack()">이전 페이지</button>
+        <button class="back-button" onclick="goBack()" data-translate="이전 페이지">이전 페이지</button>
     </div>
 
+    <script src="../js/translate.js"></script>
     <script src="../js/mypage.js"></script>
+    <script>
+        // 페이지 로드 시 언어 선택 기능 연결
+        document.addEventListener('DOMContentLoaded', () => {
+            const languageButton = document.getElementById('languageSelector');
+            if (languageButton) {
+                window.translator.attachLanguageSelector(languageButton);
+            }
+        });
+    </script>
 </body>
 
 </html>

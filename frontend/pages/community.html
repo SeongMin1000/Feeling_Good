@@ -5,38 +5,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>커뮤니티 - Feeling Good</title>
-    <link rel="stylesheet" href="../css/login.css">
+    <!-- <link rel="stylesheet" href="../css/login.css"> -->
     <link rel="stylesheet" href="../css/community.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body>
     <header class="header">
-        <div class="header-top">
-            <div class="header-top-content">
-                <div class="contact-info">
-                    <span><i class="fas fa-phone"></i> 1588-1234</span>
-                    <span><i class="fas fa-envelope"></i> help@feelinggood.kr</span>
-                </div>
-                <div class="top-links">
-                    <a href="#" onclick="logout()">로그아웃</a>
-                </div>
-            </div>
-        </div>
-
         <div class="header-main">
             <div class="logo">
                 <i class="fas fa-briefcase"></i>
                 <span>Feeling Good</span>
             </div>
             <nav class="nav-menu">
-                <a href="jobs.html" class="nav-link">채용정보</a>
-                <a href="community.html" class="nav-link active">커뮤니티</a>
-                <a href="mypage.html" class="nav-link">마이페이지</a>
+                <a href="jobs.html" class="nav-link" data-translate="채용정보">채용정보</a>
+                <a href="community.html" class="nav-link active" data-translate="커뮤니티">커뮤니티</a>
+                <a href="mypage.html" class="nav-link" data-translate="마이페이지">마이페이지</a>
             </nav>
             <div class="header-buttons">
+                <a href="#" id="languageSelector" class="language-btn"><i class="fas fa-globe"></i> <span
+                        data-translate="Language">Language</span></a>
+                <a href="#" onclick="logout()" class="logout-btn" data-translate="로그아웃">로그아웃</a>
                 <button class="btn btn-primary" onclick="openWriteModal()">
-                    <i class="fas fa-pen"></i> 글쓰기
+                    <i class="fas fa-pen"></i> <span data-translate="글쓰기">글쓰기</span>
                 </button>
             </div>
         </div>
@@ -211,7 +202,66 @@
         </div>
     </div>
 
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <i class="fas fa-briefcase"></i>
+                    <span>Feeling Good</span>
+                </div>
+                <p class="footer-description" data-translate="외국인을 위한 한국 취업 지원 플랫폼">외국인을 위한 한국 취업 지원 플랫폼</p>
+            </div>
+
+            <div class="footer-section">
+                <h4 data-translate="고객지원">고객지원</h4>
+                <div class="contact-info">
+                    <p><i class="fas fa-phone"></i> 1588-1234</p>
+                    <p><i class="fas fa-envelope"></i> help@feelinggood.kr</p>
+                    <p><i class="fas fa-clock"></i> <span data-translate="평일 09:00 - 18:00">평일 09:00 - 18:00</span></p>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h4 data-translate="서비스">서비스</h4>
+                <ul class="footer-links">
+                    <li><a href="jobs.html" data-translate="채용정보">채용정보</a></li>
+                    <li><a href="community.html" data-translate="커뮤니티">커뮤니티</a></li>
+                    <li><a href="mypage.html" data-translate="마이페이지">마이페이지</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4 data-translate="언어 선택">언어 선택</h4>
+                <div class="language-options">
+                    <span data-translate="한국어">한국어</span> |
+                    <span data-translate="English">English</span> |
+                    <span data-translate="Tiếng Việt">Tiếng Việt</span>
+                </div>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2024 Feeling Good. <span data-translate="All rights reserved.">All rights reserved.</span></p>
+        </div>
+    </footer>
+
+    <script src="../js/translate.js"></script>
     <script src="../js/community.js"></script>
+    <script>
+        // 페이지 로드 시 언어 선택 기능 연결
+        document.addEventListener('DOMContentLoaded', () => {
+            const languageButton = document.getElementById('languageSelector');
+            if (languageButton) {
+                window.translator.attachLanguageSelector(languageButton);
+            }
+        });
+    </script>
 </body>
 
 </html>

@@ -14,9 +14,9 @@
   <header class="header">
     <div class="header-top">
       <div class="header-top-content">
-        <a href="#"><i class="fas fa-info-circle"></i> 공지사항</a>
-        <a href="#"><i class="fas fa-headset"></i> 고객센터</a>
-        <a href="#"><i class="fas fa-globe"></i> English</a>
+        <a href="#"><i class="fas fa-info-circle"></i> <span data-translate="공지사항">공지사항</span></a>
+        <a href="#"><i class="fas fa-headset"></i> <span data-translate="고객센터">고객센터</span></a>
+        <a href="#" id="languageSelector"><i class="fas fa-globe"></i> <span data-translate="English">English</span></a>
       </div>
     </div>
     <div class="header-main">
@@ -25,20 +25,20 @@
         KOJOB
       </a>
       <nav class="nav-menu">
-        <a href="jobs.html" class="nav-link active">채용정보</a>
-        <a href="community.html" class="nav-link">커뮤니티</a>
-        <a href="mypage.html" class="nav-link">마이페이지</a>
-        <a href="#" class="nav-link">비자정보</a>
+        <a href="jobs.html" class="nav-link active" data-translate="채용정보">채용정보</a>
+        <a href="community.html" class="nav-link" data-translate="커뮤니티">커뮤니티</a>
+        <a href="mypage.html" class="nav-link" data-translate="마이페이지">마이페이지</a>
+        <a href="#" class="nav-link" data-translate="비자정보">비자정보</a>
       </nav>
       <div class="header-buttons">
         <button class="btn btn-outline" onclick="location.href='mypage.html'">
-          <i class="fas fa-user"></i> 마이페이지
+          <i class="fas fa-user"></i> <span data-translate="마이페이지">마이페이지</span>
         </button>
         <button class="btn btn-secondary" onclick="openAddCompanyModal()">
-          <i class="fas fa-plus"></i> 기업 추가
+          <i class="fas fa-plus"></i> <span data-translate="기업 추가">기업 추가</span>
         </button>
         <button class="btn btn-primary" onclick="logout()">
-          <i class="fas fa-sign-out-alt"></i> 로그아웃
+          <i class="fas fa-sign-out-alt"></i> <span data-translate="로그아웃">로그아웃</span>
         </button>
       </div>
     </div>
@@ -46,91 +46,105 @@
       <div class="filter-content">
         <div class="filter-group">
           <button class="filter-button active" data-filter="all">
-            <i class="fas fa-th"></i> 전체
+            <i class="fas fa-th"></i> <span data-translate="전체">전체</span>
           </button>
           <button class="filter-button" data-filter="it">
-            <i class="fas fa-code"></i> IT개발
+            <i class="fas fa-code"></i> <span data-translate="IT개발">IT개발</span>
           </button>
           <button class="filter-button" data-filter="education">
-            <i class="fas fa-graduation-cap"></i> 교육
+            <i class="fas fa-graduation-cap"></i> <span data-translate="교육">교육</span>
           </button>
           <button class="filter-button" data-filter="trade">
-            <i class="fas fa-briefcase"></i> 무역사무
+            <i class="fas fa-briefcase"></i> <span data-translate="무역사무">무역사무</span>
           </button>
           <button class="filter-button" data-filter="service">
-            <i class="fas fa-handshake"></i> 서비스
+            <i class="fas fa-handshake"></i> <span data-translate="서비스">서비스</span>
           </button>
           <button class="filter-button" data-filter="manufacture">
-            <i class="fas fa-industry"></i> 제조업
+            <i class="fas fa-industry"></i> <span data-translate="제조업">제조업</span>
           </button>
           <button class="filter-button" data-filter="design">
-            <i class="fas fa-palette"></i> 기타
+            <i class="fas fa-palette"></i> <span data-translate="기타">기타</span>
           </button>
         </div>
         <button class="advanced-filter-toggle">
-          <i class="fas fa-sliders-h"></i> 상세 검색
+          <i class="fas fa-sliders-h"></i> <span data-translate="상세 검색">상세 검색</span>
         </button>
       </div>
       <div class="advanced-filters">
         <div class="advanced-filter-content">
           <div class="filter-column">
-            <h4>고용형태</h4>
+            <h4 data-translate="고용형태">고용형태</h4>
             <div class="checkbox-group">
-              <label><input type="checkbox" name="employment" value="정규직"> 정규직</label>
-              <label><input type="checkbox" name="employment" value="계약직"> 계약직</label>
-              <label><input type="checkbox" name="employment" value="파견직"> 파견직</label>
-              <label><input type="checkbox" name="employment" value="인턴"> 인턴</label>
+              <label><input type="checkbox" name="employment" value="정규직"> <span data-translate="정규직">정규직</span></label>
+              <label><input type="checkbox" name="employment" value="계약직"> <span data-translate="계약직">계약직</span></label>
+              <label><input type="checkbox" name="employment" value="파견직"> <span data-translate="파견직">파견직</span></label>
+              <label><input type="checkbox" name="employment" value="인턴"> <span data-translate="인턴">인턴</span></label>
             </div>
           </div>
           <div class="filter-column">
-            <h4>급여</h4>
+            <h4 data-translate="급여">급여</h4>
             <div class="checkbox-group">
-              <label><input type="checkbox" name="salary" value="2000-3000"> 2,000~3,000만원</label>
-              <label><input type="checkbox" name="salary" value="3000-4000"> 3,000~4,000만원</label>
-              <label><input type="checkbox" name="salary" value="4000-5000"> 4,000~5,000만원</label>
-              <label><input type="checkbox" name="salary" value="5000+"> 5,000만원 이상</label>
+              <label><input type="checkbox" name="salary" value="2000-3000"> <span
+                  data-translate="2,000~3,000만원">2,000~3,000만원</span></label>
+              <label><input type="checkbox" name="salary" value="3000-4000"> <span
+                  data-translate="3,000~4,000만원">3,000~4,000만원</span></label>
+              <label><input type="checkbox" name="salary" value="4000-5000"> <span
+                  data-translate="4,000~5,000만원">4,000~5,000만원</span></label>
+              <label><input type="checkbox" name="salary" value="5000+"> <span data-translate="5,000만원 이상">5,000만원
+                  이상</span></label>
             </div>
           </div>
           <div class="filter-column">
-            <h4>비자종류</h4>
+            <h4 data-translate="비자종류">비자종류</h4>
             <div class="checkbox-group">
-              <label><input type="checkbox" name="visa" value="E-7"> E-7 (특정활동)</label>
-              <label><input type="checkbox" name="visa" value="E-9"> E-9 (비전문취업)</label>
-              <label><input type="checkbox" name="visa" value="E-2"> E-2 (회화지도)</label>
-              <label><input type="checkbox" name="visa" value="F-2"> F-2 (거주)</label>
-              <label><input type="checkbox" name="visa" value="F-4"> F-4 (재외동포)</label>
-              <label><input type="checkbox" name="visa" value="F-6"> F-6 (결혼이민)</label>
+              <label><input type="checkbox" name="visa" value="E-7"> <span data-translate="E-7 (특정활동)">E-7
+                  (특정활동)</span></label>
+              <label><input type="checkbox" name="visa" value="E-9"> <span data-translate="E-9 (비전문취업)">E-9
+                  (비전문취업)</span></label>
+              <label><input type="checkbox" name="visa" value="E-2"> <span data-translate="E-2 (회화지도)">E-2
+                  (회화지도)</span></label>
+              <label><input type="checkbox" name="visa" value="F-2"> <span data-translate="F-2 (거주)">F-2
+                  (거주)</span></label>
+              <label><input type="checkbox" name="visa" value="F-4"> <span data-translate="F-4 (재외동포)">F-4
+                  (재외동포)</span></label>
+              <label><input type="checkbox" name="visa" value="F-6"> <span data-translate="F-6 (결혼이민)">F-6
+                  (결혼이민)</span></label>
             </div>
           </div>
           <div class="filter-column">
-            <h4>언어수준</h4>
+            <h4 data-translate="언어수준">언어수준</h4>
             <div class="language-section">
               <div class="language-row">
-                <span>한국어</span>
+                <span data-translate="한국어">한국어</span>
                 <select name="korean-level">
-                  <option value="">무관</option>
-                  <option value="basic">기초</option>
-                  <option value="intermediate">중급</option>
-                  <option value="advanced">고급</option>
-                  <option value="native">원어민</option>
+                  <option value="" data-translate="무관">무관</option>
+                  <option value="basic" data-translate="기초">기초</option>
+                  <option value="intermediate" data-translate="중급">중급</option>
+                  <option value="advanced" data-translate="고급">고급</option>
+                  <option value="native" data-translate="원어민">원어민</option>
                 </select>
               </div>
               <div class="language-row">
-                <span>영어</span>
+                <span data-translate="영어">영어</span>
                 <select name="english-level">
-                  <option value="">무관</option>
-                  <option value="basic">기초</option>
-                  <option value="intermediate">중급</option>
-                  <option value="advanced">고급</option>
-                  <option value="native">원어민</option>
+                  <option value="" data-translate="무관">무관</option>
+                  <option value="basic" data-translate="기초">기초</option>
+                  <option value="intermediate" data-translate="중급">중급</option>
+                  <option value="advanced" data-translate="고급">고급</option>
+                  <option value="native" data-translate="원어민">원어민</option>
                 </select>
               </div>
             </div>
           </div>
         </div>
         <div class="filter-actions">
-          <button class="btn btn-outline" onclick="resetFilters()">초기화</button>
-          <button class="btn btn-primary" onclick="applyFilters()">적용하기</button>
+          <button class="btn btn-outline" onclick="resetFilters()">
+            <span data-translate="초기화">초기화</span>
+          </button>
+          <button class="btn btn-primary" onclick="applyFilters()">
+            <span data-translate="적용하기">적용하기</span>
+          </button>
         </div>
       </div>
     </div>
@@ -162,26 +176,26 @@
       <div class="control-hints">
         <div class="hint-item">
           <span class="key"><i class="fas fa-arrow-left"></i></span>
-          <span>이전</span>
+          <span data-translate="이전">이전</span>
         </div>
         <div class="hint-item">
           <span class="key">Space</span>
-          <span>다음</span>
+          <span data-translate="다음">다음</span>
         </div>
         <div class="hint-item">
           <span class="key"><i class="fas fa-heart"></i></span>
-          <span>관심 등록</span>
+          <span data-translate="관심 등록">관심 등록</span>
         </div>
         <div class="hint-item">
           <span class="key">Enter</span>
-          <span>지원하기</span>
+          <span data-translate="지원하기">지원하기</span>
         </div>
       </div>
     </div>
 
     <div class="favorites-section">
       <div class="favorites-header">
-        <h3><i class="fas fa-heart"></i> 관심 기업 목록</h3>
+        <h3><i class="fas fa-heart"></i> <span data-translate="관심 기업 목록">관심 기업 목록</span></h3>
         <span class="favorite-count" id="favoriteCount">0</span>
       </div>
       <ul id="favoriteList"></ul>
@@ -192,7 +206,7 @@
   <div id="addCompanyModal" class="modal" style="display: none;">
     <div class="modal-content">
       <div class="modal-header">
-        <h2><i class="fas fa-building"></i> 새 기업 추가</h2>
+        <h2><i class="fas fa-building"></i> <span data-translate="새 기업 추가">새 기업 추가</span></h2>
         <span class="close" onclick="closeAddCompanyModal()">&times;</span>
       </div>
       <form id="addCompanyForm" class="modal-form">
@@ -282,7 +296,17 @@
     </div>
   </div>
 
+  <script src="../js/translate.js"></script>
   <script src="../js/jobs.js"></script>
+  <script>
+    // 페이지 로드 시 언어 선택 기능 연결
+    document.addEventListener('DOMContentLoaded', () => {
+      const languageButton = document.getElementById('languageSelector');
+      if (languageButton) {
+        window.translator.attachLanguageSelector(languageButton);
+      }
+    });
+  </script>
 </body>
 
 </html>

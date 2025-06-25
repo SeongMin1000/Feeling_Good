@@ -112,11 +112,11 @@ function renderCards() {
       <div class="job-details">
         <div class="detail-item">
           <i class="fas fa-map-marker-alt"></i>
-          <span>지역: ${job.location}</span>
+          <span><span data-translate="지역">지역</span>: ${job.location}</span>
         </div>
         <div class="detail-item">
           <i class="fas fa-passport"></i>
-          <span>비자 지원: ${job.visa}</span>
+          <span><span data-translate="비자 지원">비자 지원</span>: <span data-translate="${job.visa}">${job.visa}</span></span>
         </div>
         ${job.description ? `
           <div class="job-description">
@@ -130,10 +130,10 @@ function renderCards() {
         <div class="rating">${'⭐'.repeat(job.rating)}${'☆'.repeat(5 - job.rating)}</div>
         <div class="action-buttons">
           <button class="action-button like-button" onclick="likeCard('${job.name}')">
-            <i class="fas fa-heart"></i> 관심 등록
+            <i class="fas fa-heart"></i> <span data-translate="관심 등록">관심 등록</span>
           </button>
           <button class="action-button apply-button" onclick="applyToJob('${job.name}')">
-            <i class="fas fa-paper-plane"></i> 지원하기
+            <i class="fas fa-paper-plane"></i> <span data-translate="지원하기">지원하기</span>
           </button>
         </div>
       </div>
@@ -142,6 +142,11 @@ function renderCards() {
     card.innerHTML = cardContent;
     container.appendChild(card);
   });
+
+  // 동적 콘텐츠 번역 적용
+  if (typeof translateDynamicContent === 'function') {
+    translateDynamicContent();
+  }
 }
 
 // ✅ 3. 관심 등록 렌더링
@@ -155,7 +160,9 @@ function renderFavorites() {
       <div class="favorite-item-info">
         <div class="favorite-company">${company}</div>
       </div>
-      <button class="remove-btn" onclick="removeFavorite('${company}')">삭제</button>
+      <button class="remove-btn" onclick="removeFavorite('${company}')">
+        <span data-translate="삭제">삭제</span>
+      </button>
     `;
     favoriteList.appendChild(li);
   });
@@ -167,6 +174,11 @@ function renderFavorites() {
   }
 
   localStorage.setItem('favorites', JSON.stringify([...likedCompanies]));
+
+  // 동적 콘텐츠 번역 적용
+  if (typeof translateDynamicContent === 'function') {
+    translateDynamicContent();
+  }
 }
 
 function likeCard(companyName) {

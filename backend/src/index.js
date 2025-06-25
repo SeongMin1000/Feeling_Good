@@ -10,6 +10,7 @@ const { errorHandler, notFoundHandler } = require('./middleware/errorHandler');
 
 // 라우터 import
 const userRoutes = require('./routes/userRoutes');
+const translateRoutes = require('./routes/translateRoutes');
 
 // 기본 포트 설정
 const PORT = process.env.PORT;
@@ -46,6 +47,7 @@ if (process.env.NODE_ENV === 'development') {
 
 // API 라우터 등록
 app.use('/api/user', userRoutes);
+app.use('/api/translate', translateRoutes);
 
 // Health check 엔드포인트
 app.get('/health', (req, res) => {
