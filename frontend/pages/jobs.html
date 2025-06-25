@@ -34,6 +34,9 @@
         <button class="btn btn-outline" onclick="location.href='mypage.html'">
           <i class="fas fa-user"></i> 마이페이지
         </button>
+        <button class="btn btn-secondary" onclick="openAddCompanyModal()">
+          <i class="fas fa-plus"></i> 기업 추가
+        </button>
         <button class="btn btn-primary" onclick="logout()">
           <i class="fas fa-sign-out-alt"></i> 로그아웃
         </button>
@@ -121,15 +124,44 @@
 
   <div class="main-content">
     <div class="cards-section">
-      <div class="card-container" id="cardContainer"></div>
-      <div class="progress-bar">
-        <div class="progress" id="progress"></div>
+      <div class="card-navigation">
+        <button class="nav-btn prev-btn" onclick="prevCard()" id="prevBtn">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+
+        <div class="card-container" id="cardContainer"></div>
+
+        <button class="nav-btn next-btn" onclick="nextCard()" id="nextBtn">
+          <i class="fas fa-chevron-right"></i>
+        </button>
       </div>
-      <div class="keyboard-hint">
-        <span class="key"><i class="fas fa-keyboard"></i> Space</span>
-        <span>다음 카드</span>
-        <span class="key"><i class="fas fa-heart"></i></span>
-        <span>관심 등록</span>
+
+      <div class="card-info">
+        <div class="card-counter">
+          <span id="currentCardNumber">1</span> / <span id="totalCards">3</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress" id="progress"></div>
+        </div>
+      </div>
+
+      <div class="control-hints">
+        <div class="hint-item">
+          <span class="key"><i class="fas fa-arrow-left"></i></span>
+          <span>이전</span>
+        </div>
+        <div class="hint-item">
+          <span class="key">Space</span>
+          <span>다음</span>
+        </div>
+        <div class="hint-item">
+          <span class="key"><i class="fas fa-heart"></i></span>
+          <span>관심 등록</span>
+        </div>
+        <div class="hint-item">
+          <span class="key">Enter</span>
+          <span>지원하기</span>
+        </div>
       </div>
     </div>
 
@@ -139,6 +171,85 @@
         <span class="favorite-count" id="favoriteCount">0</span>
       </div>
       <ul id="favoriteList"></ul>
+    </div>
+  </div>
+
+  <!-- 기업 추가 모달 -->
+  <div id="addCompanyModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2><i class="fas fa-building"></i> 새 기업 추가</h2>
+        <span class="close" onclick="closeAddCompanyModal()">&times;</span>
+      </div>
+      <form id="addCompanyForm" class="modal-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="companyName">회사명 *</label>
+            <input type="text" id="companyName" name="companyName" required>
+          </div>
+          <div class="form-group">
+            <label for="companyLocation">지역 *</label>
+            <select id="companyLocation" name="location" required>
+              <option value="">선택하세요</option>
+              <option value="서울">서울</option>
+              <option value="경기">경기</option>
+              <option value="인천">인천</option>
+              <option value="부산">부산</option>
+              <option value="대구">대구</option>
+              <option value="광주">광주</option>
+              <option value="대전">대전</option>
+              <option value="울산">울산</option>
+              <option value="기타">기타</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="jobTitle">직무명 *</label>
+            <input type="text" id="jobTitle" name="job" required placeholder="예: 마케팅 인턴, 제조 작업자">
+          </div>
+          <div class="form-group">
+            <label for="visaSupport">비자 지원 *</label>
+            <select id="visaSupport" name="visa" required>
+              <option value="">선택하세요</option>
+              <option value="지원 가능">지원 가능</option>
+              <option value="지원 불가능">지원 불가능</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="companyRating">평점 *</label>
+            <select id="companyRating" name="rating" required>
+              <option value="">선택하세요</option>
+              <option value="5">⭐⭐⭐⭐⭐ (5점)</option>
+              <option value="4">⭐⭐⭐⭐☆ (4점)</option>
+              <option value="3">⭐⭐⭐☆☆ (3점)</option>
+              <option value="2">⭐⭐☆☆☆ (2점)</option>
+              <option value="1">⭐☆☆☆☆ (1점)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="companyLogo">로고 URL</label>
+            <input type="url" id="companyLogo" name="logo" placeholder="https://example.com/logo.png">
+          </div>
+        </div>
+
+        <div class="form-group full-width">
+          <label for="jobDescription">상세 설명</label>
+          <textarea id="jobDescription" name="description" rows="3"
+            placeholder="회사 및 직무에 대한 상세 설명을 입력하세요..."></textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline" onclick="closeAddCompanyModal()">취소</button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-plus"></i> 기업 추가
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 

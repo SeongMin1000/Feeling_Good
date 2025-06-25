@@ -17,6 +17,14 @@
       <fieldset>
         <legend>기본 정보</legend>
         <div class="form-group">
+          <label for="userType">회원 유형 *</label>
+          <select id="userType" name="userType" required>
+            <option value="">선택하세요</option>
+            <option value="구직자">구직자 (일자리를 찾는 분)</option>
+            <option value="고용주">고용주 (직원을 채용하는 분)</option>
+          </select>
+        </div>
+        <div class="form-group">
           <label for="username">이름/닉네임 *</label>
           <input type="text" id="username" name="username" required />
         </div>
@@ -47,8 +55,8 @@
         </div>
       </fieldset>
 
-      <!-- 체류 정보 -->
-      <fieldset>
+      <!-- 체류 정보 (구직자 전용) -->
+      <fieldset class="jobseeker-only" style="display: none;">
         <legend>체류 정보</legend>
         <div class="form-group">
           <label for="nationality">국적 *</label>
@@ -110,6 +118,44 @@
         </div>
       </fieldset>
 
+      <!-- 회사 정보 (고용주 전용) -->
+      <fieldset class="employer-only" style="display: none;">
+        <legend>회사 정보</legend>
+        <div class="form-group">
+          <label for="companyName">회사명 *</label>
+          <input type="text" id="companyName" name="companyName" />
+        </div>
+        <div class="form-group">
+          <label for="businessNumber">사업자등록번호</label>
+          <input type="text" id="businessNumber" name="businessNumber" placeholder="000-00-00000" />
+        </div>
+        <div class="form-group">
+          <label for="industry">업종 *</label>
+          <select id="industry" name="industry">
+            <option value="">선택하세요</option>
+            <option value="제조업">제조업</option>
+            <option value="건설업">건설업</option>
+            <option value="농축산업">농축산업</option>
+            <option value="어업">어업</option>
+            <option value="서비스업">서비스업</option>
+            <option value="음식업">음식업</option>
+            <option value="소매업">소매업</option>
+            <option value="IT/기술">IT/기술</option>
+            <option value="기타">기타</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="companySize">회사 규모</label>
+          <select id="companySize" name="companySize">
+            <option value="">선택하세요</option>
+            <option value="10명 미만">10명 미만</option>
+            <option value="10-50명">10-50명</option>
+            <option value="50-100명">50-100명</option>
+            <option value="100명 이상">100명 이상</option>
+          </select>
+        </div>
+      </fieldset>
+
       <!-- 언어 정보 -->
       <fieldset>
         <legend>언어 정보</legend>
@@ -124,7 +170,7 @@
             <option value="우즈베크어">우즈베크어</option>
           </select>
         </div>
-        <div class="form-group">
+        <div class="form-group jobseeker-only" style="display: none;">
           <label for="koreanLevel">한국어 능력</label>
           <select id="koreanLevel" name="koreanLevel">
             <option value="">선택하세요</option>
@@ -135,8 +181,8 @@
         </div>
       </fieldset>
 
-      <!-- 직무/경력 정보 -->
-      <fieldset>
+      <!-- 직무/경력 정보 (구직자 전용) -->
+      <fieldset class="jobseeker-only" style="display: none;">
         <legend>직무/경력 정보</legend>
         <div class="form-group">
           <label for="desiredIndustry">희망 직종/산업군 *</label>

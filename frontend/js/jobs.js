@@ -43,8 +43,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // 구인 정보 페이지 초기화
 function initializeJobsPage() {
+  loadSavedJobs(); // 저장된 기업 데이터 불러오기
   renderCards();
   renderFavorites();
+  updateUI(); // 초기 UI 설정
 }
 
 const jobData = [
@@ -88,19 +90,48 @@ function renderCards() {
     const card = document.createElement('div');
     card.className = 'card';
     if (index === 0) card.classList.add('active');
-    card.innerHTML = `
-      <div>
-        <img src="${job.logo}" alt="${job.name} Logo">
-        <h2>${job.name}</h2>
-        <p>지역: ${job.location}</p>
-        <p>직무: ${job.job}</p>
-        <p>비자: ${job.visa}</p>
+
+    // 카드 내용 구성
+    const cardContent = `
+      <div class="card-header">
+        <img src="${job.logo}" alt="${job.name} Logo" class="company-logo">
+        <div class="company-info">
+          <h2>${job.name}</h2>
+          <p class="job-title">${job.job}</p>
+        </div>
       </div>
-      <div>
+      
+      <div class="job-details">
+        <div class="detail-item">
+          <i class="fas fa-map-marker-alt"></i>
+          <span>지역: ${job.location}</span>
+        </div>
+        <div class="detail-item">
+          <i class="fas fa-passport"></i>
+          <span>비자 지원: ${job.visa}</span>
+        </div>
+        ${job.description ? `
+          <div class="job-description">
+            <i class="fas fa-info-circle"></i>
+            ${job.description}
+          </div>
+        ` : ''}
+      </div>
+      
+      <div class="card-actions">
         <div class="rating">${'⭐'.repeat(job.rating)}${'☆'.repeat(5 - job.rating)}</div>
-        <button class="like-button" onclick="likeCard('${job.name}')">❤️ 관심 등록</button>
+        <div class="action-buttons">
+          <button class="action-button like-button" onclick="likeCard('${job.name}')">
+            <i class="fas fa-heart"></i> 관심 등록
+          </button>
+          <button class="action-button apply-button" onclick="applyToJob('${job.name}')">
+            <i class="fas fa-paper-plane"></i> 지원하기
+          </button>
+        </div>
       </div>
     `;
+
+    card.innerHTML = cardContent;
     container.appendChild(card);
   });
 }
@@ -113,11 +144,20 @@ function renderFavorites() {
   likedCompanies.forEach(company => {
     const li = document.createElement('li');
     li.innerHTML = `
-      <span>${company}</span>
+      <div class="favorite-item-info">
+        <div class="favorite-company">${company}</div>
+      </div>
       <button class="remove-btn" onclick="removeFavorite('${company}')">삭제</button>
     `;
     favoriteList.appendChild(li);
   });
+
+  // 관심 등록 개수 업데이트
+  const favoriteCount = document.getElementById('favoriteCount');
+  if (favoriteCount) {
+    favoriteCount.textContent = likedCompanies.size;
+  }
+
   localStorage.setItem('favorites', JSON.stringify([...likedCompanies]));
 }
 
@@ -135,6 +175,11 @@ function removeFavorite(companyName) {
   renderFavorites();
 }
 
+// ✅ 지원하기 기능 (임시)
+function applyToJob(companyName) {
+  alert(`${companyName}에 지원서를 제출했습니다!\n\n추후 지원서 관리 기능이 추가될 예정입니다.`);
+}
+
 // ✅ 4. 카드 넘기기
 function nextCard() {
   const cards = document.querySelectorAll('.card');
@@ -143,11 +188,257 @@ function nextCard() {
   cards[current].classList.remove('active');
   current = (current + 1) % cards.length;
   cards[current].classList.add('active');
+  updateUI(); // UI 업데이트
 }
 
-// ✅ 5. 화살표로 넘기기
+function prevCard() {
+  const cards = document.querySelectorAll('.card');
+  if (cards.length === 0) return;
+
+  cards[current].classList.remove('active');
+  current = (current - 1 + cards.length) % cards.length;
+  cards[current].classList.add('active');
+  updateUI(); // UI 업데이트
+}
+
+// ✅ 5. 키보드 네비게이션
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowRight') nextCard();
+  // 모달이 열려있을 때는 키보드 네비게이션 비활성화
+  const modal = document.getElementById('addCompanyModal');
+  if (modal && modal.style.display === 'flex') return;
+
+  switch (e.key) {
+    case 'ArrowRight':
+    case ' ': // 스페이스바
+      e.preventDefault();
+      nextCard();
+      break;
+    case 'ArrowLeft':
+      e.preventDefault();
+      prevCard();
+      break;
+    case 'Enter':
+      e.preventDefault();
+      const currentJob = jobData[current];
+      if (currentJob) applyToJob(currentJob.name);
+      break;
+    case 'h': // 하트
+    case 'l': // like
+      e.preventDefault();
+      const currentJobForLike = jobData[current];
+      if (currentJobForLike) likeCard(currentJobForLike.name);
+      break;
+  }
+});
+
+// ✅ 6. 기업 추가 모달 관련 함수들
+function openAddCompanyModal() {
+  document.getElementById('addCompanyModal').style.display = 'flex';
+  document.body.style.overflow = 'hidden'; // 배경 스크롤 방지
+}
+
+function closeAddCompanyModal() {
+  document.getElementById('addCompanyModal').style.display = 'none';
+  document.body.style.overflow = 'auto';
+  // 폼 초기화
+  document.getElementById('addCompanyForm').reset();
+}
+
+// 모달 외부 클릭 시 닫기
+document.addEventListener('click', function (e) {
+  const modal = document.getElementById('addCompanyModal');
+  if (e.target === modal) {
+    closeAddCompanyModal();
+  }
+});
+
+// ESC 키로 모달 닫기
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape') {
+    closeAddCompanyModal();
+  }
+});
+
+// ✅ 7. 기업 추가 폼 제출 처리
+document.addEventListener('DOMContentLoaded', function () {
+  const addCompanyForm = document.getElementById('addCompanyForm');
+  if (addCompanyForm) {
+    addCompanyForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      addNewCompany();
+    });
+  }
+});
+
+function addNewCompany() {
+  const formData = new FormData(document.getElementById('addCompanyForm'));
+
+  const newCompany = {
+    name: formData.get('companyName'),
+    location: formData.get('location'),
+    job: formData.get('job'),
+    visa: formData.get('visa'),
+    rating: parseInt(formData.get('rating')),
+    logo: formData.get('logo') || `https://via.placeholder.com/100x100.png?text=${encodeURIComponent(formData.get('companyName'))}`,
+    description: formData.get('description') || ''
+  };
+
+  // 필수 필드 검증
+  if (!newCompany.name || !newCompany.location || !newCompany.job || !newCompany.visa || !newCompany.rating) {
+    alert('필수 항목을 모두 입력해주세요.');
+    return;
+  }
+
+  // jobData 배열에 새 회사 추가
+  jobData.push(newCompany);
+
+  // 로컬 스토리지에 저장
+  localStorage.setItem('customJobs', JSON.stringify(jobData));
+
+  // 카드 다시 렌더링
+  renderCards();
+
+  // 성공 메시지 및 모달 닫기
+  alert(`${newCompany.name} 기업이 성공적으로 추가되었습니다!`);
+  closeAddCompanyModal();
+
+  // 새로 추가된 카드로 이동
+  const newIndex = jobData.length - 1;
+  showCard(newIndex);
+}
+
+// ✅ 8. 특정 카드 표시 함수
+function showCard(index) {
+  const cards = document.querySelectorAll('.card');
+  if (cards.length === 0 || index < 0 || index >= cards.length) return;
+
+  // 모든 카드 비활성화
+  cards.forEach(card => card.classList.remove('active'));
+
+  // 지정된 카드 활성화
+  cards[index].classList.add('active');
+  current = index;
+
+  // UI 업데이트
+  updateUI();
+}
+
+// ✅ 9. UI 업데이트 함수 (진행률 + 카운터 + 버튼 상태)
+function updateUI() {
+  updateProgress();
+  updateCardCounter();
+  updateNavigationButtons();
+}
+
+function updateProgress() {
+  const progressBar = document.getElementById('progress');
+  if (progressBar && jobData.length > 0) {
+    const progressPercent = ((current + 1) / jobData.length) * 100;
+    progressBar.style.width = `${progressPercent}%`;
+  }
+}
+
+function updateCardCounter() {
+  const currentCardNumber = document.getElementById('currentCardNumber');
+  const totalCards = document.getElementById('totalCards');
+
+  if (currentCardNumber && totalCards) {
+    currentCardNumber.textContent = current + 1;
+    totalCards.textContent = jobData.length;
+  }
+}
+
+function updateNavigationButtons() {
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+
+  if (prevBtn && nextBtn) {
+    // 첫 번째 카드일 때 이전 버튼 비활성화
+    prevBtn.disabled = (current === 0);
+    // 마지막 카드일 때 다음 버튼 비활성화
+    nextBtn.disabled = (current === jobData.length - 1);
+  }
+}
+
+// ✅ 10. 페이지 로드 시 저장된 기업 데이터 불러오기
+function loadSavedJobs() {
+  const savedJobs = localStorage.getItem('customJobs');
+  if (savedJobs) {
+    const parsedJobs = JSON.parse(savedJobs);
+    // 기본 데이터와 저장된 데이터 병합 (중복 제거)
+    const existingNames = jobData.map(job => job.name);
+    const newJobs = parsedJobs.filter(job => !existingNames.includes(job.name));
+    jobData.push(...newJobs);
+  }
+}
+
+// ✅ 11. 터치/스와이프 기능
+let touchStartX = 0;
+let touchEndX = 0;
+
+function handleSwipe() {
+  const swipeThreshold = 50; // 최소 스와이프 거리
+  const swipeDistance = touchEndX - touchStartX;
+
+  if (Math.abs(swipeDistance) > swipeThreshold) {
+    if (swipeDistance > 0) {
+      // 오른쪽으로 스와이프 = 이전 카드
+      prevCard();
+    } else {
+      // 왼쪽으로 스와이프 = 다음 카드
+      nextCard();
+    }
+  }
+}
+
+// 터치 이벤트 리스너 추가
+document.addEventListener('DOMContentLoaded', function () {
+  const cardContainer = document.getElementById('cardContainer');
+
+  if (cardContainer) {
+    // 터치 시작
+    cardContainer.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].clientX;
+    }, { passive: true });
+
+    // 터치 종료
+    cardContainer.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].clientX;
+      handleSwipe();
+    }, { passive: true });
+
+    // 마우스 드래그도 지원
+    let isMouseDown = false;
+
+    cardContainer.addEventListener('mousedown', (e) => {
+      isMouseDown = true;
+      touchStartX = e.clientX;
+      cardContainer.style.cursor = 'grabbing';
+    });
+
+    cardContainer.addEventListener('mousemove', (e) => {
+      if (isMouseDown) {
+        e.preventDefault();
+      }
+    });
+
+    cardContainer.addEventListener('mouseup', (e) => {
+      if (isMouseDown) {
+        touchEndX = e.clientX;
+        handleSwipe();
+        isMouseDown = false;
+        cardContainer.style.cursor = 'grab';
+      }
+    });
+
+    cardContainer.addEventListener('mouseleave', () => {
+      isMouseDown = false;
+      cardContainer.style.cursor = 'grab';
+    });
+
+    // 커서 스타일 설정
+    cardContainer.style.cursor = 'grab';
+  }
 });
 
 // 로그아웃 기능

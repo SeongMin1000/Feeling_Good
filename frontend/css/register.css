@@ -5,6 +5,35 @@
     max-width: 600px;
 }
 
+/* 회원 유형 선택 강조 */
+#userType {
+    border: 2px solid #4CAF50;
+    font-weight: bold;
+}
+
+#userType:focus {
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3);
+}
+
+/* 동적 필드 전환 애니메이션 */
+.jobseeker-only,
+.employer-only {
+    transition: all 0.3s ease-in-out;
+    overflow: hidden;
+}
+
+.field-transition {
+    opacity: 0;
+    max-height: 0;
+    transform: translateY(-10px);
+}
+
+.field-show {
+    opacity: 1;
+    max-height: 1000px;
+    transform: translateY(0);
+}
+
 /* 추가 입력 필드 타입 스타일 */
 input[type="number"],
 input[type="date"] {
@@ -40,6 +69,32 @@ fieldset {
 fieldset legend {
     padding: 0 0.5rem;
     background-color: #f5f5f5;
+}
+
+/* 구직자 전용 필드 스타일 */
+.jobseeker-only fieldset {
+    border-color: #2196F3;
+}
+
+.jobseeker-only legend {
+    color: #2196F3;
+    background-color: #e3f2fd;
+}
+
+/* 고용주 전용 필드 스타일 */
+.employer-only fieldset {
+    border-color: #FF9800;
+}
+
+.employer-only legend {
+    color: #FF9800;
+    background-color: #fff3e0;
+}
+
+/* 사업자등록번호 입력 필드 */
+input[placeholder*="000-00-00000"] {
+    font-family: monospace;
+    letter-spacing: 1px;
 }
 
 /* 추가 스타일이 필요한 경우에만 사용 */
