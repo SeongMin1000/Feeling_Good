@@ -372,6 +372,26 @@ body {
   font-size: 1.5rem;
 }
 
+.job-title {
+  color: #666;
+  font-size: 1rem;
+  margin: 0.5rem 0;
+}
+
+.category-tag {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--primary-color), #4a90e2);
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 .job-details {
   margin-top: 1.5rem;
 }

@@ -26,8 +26,8 @@
       </a>
       <nav class="nav-menu">
         <a href="jobs.html" class="nav-link active">채용정보</a>
-        <a href="#" class="nav-link">기업정보</a>
-        <a href="#" class="nav-link">취업가이드</a>
+        <a href="community.html" class="nav-link">커뮤니티</a>
+        <a href="mypage.html" class="nav-link">마이페이지</a>
         <a href="#" class="nav-link">비자정보</a>
       </nav>
       <div class="header-buttons">
@@ -45,13 +45,27 @@
     <div class="filter-section">
       <div class="filter-content">
         <div class="filter-group">
-          <button class="filter-button active" data-filter="all">전체</button>
-          <button class="filter-button" data-filter="it">IT/개발</button>
-          <button class="filter-button" data-filter="education">교육</button>
-          <button class="filter-button" data-filter="trade">무역/사무</button>
-          <button class="filter-button" data-filter="manufacture">제조/생산</button>
-          <button class="filter-button" data-filter="service">서비스</button>
-          <button class="filter-button" data-filter="design">디자인</button>
+          <button class="filter-button active" data-filter="all">
+            <i class="fas fa-th"></i> 전체
+          </button>
+          <button class="filter-button" data-filter="it">
+            <i class="fas fa-code"></i> IT개발
+          </button>
+          <button class="filter-button" data-filter="education">
+            <i class="fas fa-graduation-cap"></i> 교육
+          </button>
+          <button class="filter-button" data-filter="trade">
+            <i class="fas fa-briefcase"></i> 무역사무
+          </button>
+          <button class="filter-button" data-filter="service">
+            <i class="fas fa-handshake"></i> 서비스
+          </button>
+          <button class="filter-button" data-filter="manufacture">
+            <i class="fas fa-industry"></i> 제조업
+          </button>
+          <button class="filter-button" data-filter="design">
+            <i class="fas fa-palette"></i> 기타
+          </button>
         </div>
         <button class="advanced-filter-toggle">
           <i class="fas fa-sliders-h"></i> 상세 검색
@@ -210,6 +224,21 @@
             <input type="text" id="jobTitle" name="job" required placeholder="예: 마케팅 인턴, 제조 작업자">
           </div>
           <div class="form-group">
+            <label for="jobCategory">직무 카테고리 *</label>
+            <select id="jobCategory" name="category" required>
+              <option value="">선택하세요</option>
+              <option value="IT개발">IT개발</option>
+              <option value="교육">교육</option>
+              <option value="무역사무">무역사무</option>
+              <option value="서비스">서비스</option>
+              <option value="제조업">제조업</option>
+              <option value="기타">기타</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
             <label for="visaSupport">비자 지원 *</label>
             <select id="visaSupport" name="visa" required>
               <option value="">선택하세요</option>
@@ -217,9 +246,6 @@
               <option value="지원 불가능">지원 불가능</option>
             </select>
           </div>
-        </div>
-
-        <div class="form-row">
           <div class="form-group">
             <label for="companyRating">평점 *</label>
             <select id="companyRating" name="rating" required>
@@ -231,6 +257,9 @@
               <option value="1">⭐☆☆☆☆ (1점)</option>
             </select>
           </div>
+        </div>
+
+        <div class="form-row">
           <div class="form-group">
             <label for="companyLogo">로고 URL</label>
             <input type="url" id="companyLogo" name="logo" placeholder="https://example.com/logo.png">

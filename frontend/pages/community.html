@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>커뮤니티 - Feeling Good</title>
+    <link rel="stylesheet" href="../css/login.css">
+    <link rel="stylesheet" href="../css/community.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-top">
+            <div class="header-top-content">
+                <div class="contact-info">
+                    <span><i class="fas fa-phone"></i> 1588-1234</span>
+                    <span><i class="fas fa-envelope"></i> help@feelinggood.kr</span>
+                </div>
+                <div class="top-links">
+                    <a href="#" onclick="logout()">로그아웃</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-main">
+            <div class="logo">
+                <i class="fas fa-briefcase"></i>
+                <span>Feeling Good</span>
+            </div>
+            <nav class="nav-menu">
+                <a href="jobs.html" class="nav-link">채용정보</a>
+                <a href="community.html" class="nav-link active">커뮤니티</a>
+                <a href="mypage.html" class="nav-link">마이페이지</a>
+            </nav>
+            <div class="header-buttons">
+                <button class="btn btn-primary" onclick="openWriteModal()">
+                    <i class="fas fa-pen"></i> 글쓰기
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <div class="community-container">
+            <!-- 카테고리 탭 -->
+            <div class="category-tabs">
+                <button class="tab-btn active" data-category="all" onclick="filterPosts('all')">
+                    <i class="fas fa-th"></i> 전체
+                </button>
+                <button class="tab-btn" data-category="job-info" onclick="filterPosts('job-info')">
+                    <i class="fas fa-briefcase"></i> 취업정보
+                </button>
+                <button class="tab-btn" data-category="life-tips" onclick="filterPosts('life-tips')">
+                    <i class="fas fa-lightbulb"></i> 생활팁
+                </button>
+                <button class="tab-btn" data-category="qna" onclick="filterPosts('qna')">
+                    <i class="fas fa-question-circle"></i> Q&A
+                </button>
+                <button class="tab-btn" data-category="free-talk" onclick="filterPosts('free-talk')">
+                    <i class="fas fa-comments"></i> 자유게시판
+                </button>
+            </div>
+
+            <!-- 검색 바 -->
+            <div class="search-bar">
+                <div class="search-input-group">
+                    <select id="searchType" class="search-select">
+                        <option value="title">제목</option>
+                        <option value="content">내용</option>
+                        <option value="author">작성자</option>
+                        <option value="all">전체</option>
+                    </select>
+                    <input type="text" id="searchInput" placeholder="검색어를 입력하세요..."
+                        onkeypress="handleSearchEnter(event)">
+                    <button class="search-btn" onclick="searchPosts()">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 게시글 목록 -->
+            <div class="posts-container">
+                <div class="posts-header">
+                    <div class="posts-count">
+                        총 <span id="postsCount">0</span>개의 게시글
+                    </div>
+                    <div class="sort-options">
+                        <select id="sortType" onchange="sortPosts(this.value)">
+                            <option value="latest">최신순</option>
+                            <option value="popular">인기순</option>
+                            <option value="comments">댓글순</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="posts-list" id="postsList">
+                    <!-- 게시글 목록이 여기에 동적으로 생성됩니다 -->
+                </div>
+
+                <!-- 페이지네이션 -->
+                <div class="pagination" id="pagination">
+                    <!-- 페이지 번호가 여기에 동적으로 생성됩니다 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 글쓰기 모달 -->
+    <div id="writeModal" class="modal" style="display: none;">
+        <div class="modal-content write-modal">
+            <div class="modal-header">
+                <h2><i class="fas fa-pen"></i> 새 게시글 작성</h2>
+                <span class="close" onclick="closeWriteModal()">&times;</span>
+            </div>
+            <form id="writeForm" class="write-form">
+                <div class="form-group">
+                    <label for="postCategory">카테고리 *</label>
+                    <select id="postCategory" name="category" required>
+                        <option value="">선택하세요</option>
+                        <option value="job-info">취업정보</option>
+                        <option value="life-tips">생활팁</option>
+                        <option value="qna">Q&A</option>
+                        <option value="free-talk">자유게시판</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="postTitle">제목 *</label>
+                    <input type="text" id="postTitle" name="title" required placeholder="제목을 입력하세요">
+                </div>
+
+                <div class="form-group">
+                    <label for="postContent">내용 *</label>
+                    <textarea id="postContent" name="content" required rows="10"
+                        placeholder="내용을 입력하세요. 다른 사용자에게 도움이 되는 정보를 공유해주세요!"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="isAnonymous" name="anonymous">
+                        익명으로 작성하기
+                    </label>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" onclick="closeWriteModal()">취소</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> 게시글 등록
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 게시글 상세보기 모달 -->
+    <div id="postDetailModal" class="modal" style="display: none;">
+        <div class="modal-content detail-modal">
+            <div class="modal-header">
+                <h2 id="detailTitle">게시글 제목</h2>
+                <span class="close" onclick="closeDetailModal()">&times;</span>
+            </div>
+            <div class="post-detail-content">
+                <div class="post-meta">
+                    <div class="author-info">
+                        <i class="fas fa-user"></i>
+                        <span id="detailAuthor">작성자</span>
+                    </div>
+                    <div class="post-stats">
+                        <span id="detailDate">2024-01-01</span>
+                        <span><i class="fas fa-eye"></i> <span id="detailViews">0</span></span>
+                        <span><i class="fas fa-thumbs-up"></i> <span id="detailLikes">0</span></span>
+                    </div>
+                </div>
+
+                <div class="post-content" id="detailContent">
+                    게시글 내용이 여기에 표시됩니다.
+                </div>
+
+                <div class="post-actions">
+                    <button class="action-btn like-btn" onclick="toggleLike()">
+                        <i class="fas fa-thumbs-up"></i> 좋아요
+                    </button>
+                    <button class="action-btn bookmark-btn" onclick="toggleBookmark()">
+                        <i class="fas fa-bookmark"></i> 북마크
+                    </button>
+                    <button class="action-btn share-btn" onclick="sharePost()">
+                        <i class="fas fa-share"></i> 공유
+                    </button>
+                </div>
+
+                <!-- 댓글 섹션 -->
+                <div class="comments-section">
+                    <div class="comments-header">
+                        <h3>댓글 <span id="commentsCount">0</span>개</h3>
+                    </div>
+
+                    <div class="comment-write">
+                        <textarea id="commentInput" placeholder="댓글을 입력하세요..." rows="3"></textarea>
+                        <button class="btn btn-primary comment-submit" onclick="addComment()">
+                            <i class="fas fa-paper-plane"></i> 댓글 작성
+                        </button>
+                    </div>
+
+                    <div class="comments-list" id="commentsList">
+                        <!-- 댓글 목록이 여기에 동적으로 생성됩니다 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/community.js"></script>
+</body>
+
+</html>

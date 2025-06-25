@@ -54,6 +54,7 @@ const jobData = [
     name: "KGlobal Inc.",
     location: "서울",
     job: "마케팅 인턴",
+    category: "서비스",
     visa: "지원 가능",
     rating: 4,
     logo: "https://via.placeholder.com/100x100.png?text=KGlobal"
@@ -62,6 +63,7 @@ const jobData = [
     name: "Ocean Korea",
     location: "부산",
     job: "유통관리",
+    category: "무역사무",
     visa: "지원 불가능",
     rating: 3,
     logo: "https://via.placeholder.com/100x100.png?text=Ocean"
@@ -70,11 +72,16 @@ const jobData = [
     name: "Hansung Tech",
     location: "인천",
     job: "엔지니어",
+    category: "IT개발",
     visa: "지원 가능",
     rating: 5,
     logo: "https://via.placeholder.com/100x100.png?text=Hansung"
   }
 ];
+
+// 카테고리 필터링 관련 변수
+let currentCategory = 'all';
+let filteredJobData = [...jobData];
 
 const container = document.getElementById('cardContainer');
 const favoriteList = document.getElementById('favoriteList');
@@ -86,7 +93,7 @@ function renderCards() {
   if (!container) return;
 
   container.innerHTML = '';
-  jobData.forEach((job, index) => {
+  filteredJobData.forEach((job, index) => {
     const card = document.createElement('div');
     card.className = 'card';
     if (index === 0) card.classList.add('active');
@@ -96,8 +103,9 @@ function renderCards() {
       <div class="card-header">
         <img src="${job.logo}" alt="${job.name} Logo" class="company-logo">
         <div class="company-info">
-          <h2>${job.name}</h2>
+        <h2>${job.name}</h2>
           <p class="job-title">${job.job}</p>
+          <span class="category-tag">${job.category}</span>
         </div>
       </div>
       
@@ -178,6 +186,91 @@ function removeFavorite(companyName) {
 // ✅ 지원하기 기능 (임시)
 function applyToJob(companyName) {
   alert(`${companyName}에 지원서를 제출했습니다!\n\n추후 지원서 관리 기능이 추가될 예정입니다.`);
+}
+
+// ✅ 카테고리 필터링 기능
+function filterByCategory(category) {
+  currentCategory = category;
+
+  // 필터 버튼 상태 업데이트
+  document.querySelectorAll('.filter-button').forEach(btn => {
+    btn.classList.remove('active');
+  });
+
+  // 클릭된 버튼에 active 클래스 추가
+  const clickedBtn = document.querySelector(`[data-filter="${getCategoryKey(category)}"]`);
+  if (clickedBtn) {
+    clickedBtn.classList.add('active');
+  }
+
+  // 데이터 필터링
+  if (category === 'all') {
+    filteredJobData = [...jobData];
+  } else {
+    filteredJobData = jobData.filter(job => job.category === category);
+  }
+
+  // 현재 인덱스 초기화
+  current = 0;
+
+  // 카드 다시 렌더링
+  renderCards();
+  updateUI();
+
+  // 필터 결과 알림
+  const resultCount = filteredJobData.length;
+  if (category === 'all') {
+    console.log(`전체 ${resultCount}개 기업을 표시합니다.`);
+  } else {
+    console.log(`${category} 카테고리 ${resultCount}개 기업을 표시합니다.`);
+  }
+}
+
+// 카테고리명을 필터 키로 변환하는 함수
+function getCategoryKey(category) {
+  const categoryMap = {
+    'all': 'all',
+    'IT개발': 'it',
+    '교육': 'education',
+    '무역사무': 'trade',
+    '서비스': 'service',
+    '제조업': 'manufacture',
+    '기타': 'other'
+  };
+  return categoryMap[category] || 'other';
+}
+
+// 기존 필터 버튼들에 이벤트 리스너 추가
+document.addEventListener('DOMContentLoaded', function () {
+  // 필터 버튼 이벤트 리스너
+  const filterButtons = document.querySelectorAll('.filter-button');
+  filterButtons.forEach(button => {
+    button.addEventListener('click', function () {
+      const filterType = this.getAttribute('data-filter');
+      const categoryName = getCategoryName(filterType);
+      filterByCategory(categoryName);
+    });
+  });
+
+  // 전체 버튼 기본 활성화
+  const allButton = document.querySelector('[data-filter="all"]');
+  if (allButton) {
+    allButton.classList.add('active');
+  }
+});
+
+// 필터 키를 카테고리명으로 변환하는 함수
+function getCategoryName(filterKey) {
+  const keyMap = {
+    'all': 'all',
+    'it': 'IT개발',
+    'education': '교육',
+    'trade': '무역사무',
+    'service': '서비스',
+    'manufacture': '제조업',
+    'design': '기타'
+  };
+  return keyMap[filterKey] || 'all';
 }
 
 // ✅ 4. 카드 넘기기
@@ -277,6 +370,7 @@ function addNewCompany() {
     name: formData.get('companyName'),
     location: formData.get('location'),
     job: formData.get('job'),
+    category: formData.get('category'),
     visa: formData.get('visa'),
     rating: parseInt(formData.get('rating')),
     logo: formData.get('logo') || `https://via.placeholder.com/100x100.png?text=${encodeURIComponent(formData.get('companyName'))}`,
@@ -284,13 +378,18 @@ function addNewCompany() {
   };
 
   // 필수 필드 검증
-  if (!newCompany.name || !newCompany.location || !newCompany.job || !newCompany.visa || !newCompany.rating) {
+  if (!newCompany.name || !newCompany.location || !newCompany.job || !newCompany.category || !newCompany.visa || !newCompany.rating) {
     alert('필수 항목을 모두 입력해주세요.');
     return;
   }
 
   // jobData 배열에 새 회사 추가
   jobData.push(newCompany);
+
+  // 현재 필터에 맞는 데이터도 업데이트
+  if (currentCategory === 'all' || currentCategory === newCompany.category) {
+    filteredJobData.push(newCompany);
+  }
 
   // 로컬 스토리지에 저장
   localStorage.setItem('customJobs', JSON.stringify(jobData));
