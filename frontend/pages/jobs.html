@@ -1,19 +1,22 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>구직 카드 스와이프</title>
   <link rel="stylesheet" href="../css/style.css">
 </head>
+
 <body>
   <h1>구직 카드 스와이프</h1>
   <div class="card-container" id="cardContainer"></div>
   <button onclick="nextCard()">➡ 다음</button>
-  
+
   <!-- ✅ 마이페이지 이동 버튼 추가 -->
   <div style="margin-top: 1rem;">
     <button onclick="location.href='mypage.html'">🙋 마이페이지</button>
+    <button onclick="logout()" style="background-color: #f44336; color: white; margin-left: 10px;">🔓 로그아웃</button>
   </div>
 
   <div id="favorites">
@@ -23,4 +26,5 @@
 
   <script src="../js/jobs.js"></script>
 </body>
+
 </html>
