@@ -39,13 +39,26 @@ body {
 .form-group label {
     color: #555;
     font-size: 0.9rem;
+    font-weight: bold;
 }
 
-.form-group input {
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
     padding: 0.8rem;
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
 }
 
 .auth-button {
@@ -76,4 +89,18 @@ body {
 
 .auth-link a:hover {
     text-decoration: underline;
-} 
+}
+
+fieldset {
+    border: none;
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+fieldset legend {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    display: block;
+    color: #333;
+    font-size: 1.1rem;
+}

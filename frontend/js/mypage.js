@@ -85,11 +85,6 @@ function goBack() {
   window.history.back();
 }
 
-// 🔙 뒤로 가기 버튼 기능
-function goBack() {
-  window.history.back();
-}
-
 // 로그아웃 기능
 function logout() {
   if (confirm('로그아웃 하시겠습니까?')) {
