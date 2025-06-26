@@ -1,42 +1,10 @@
 // 채용정보 페이지 JavaScript - 커뮤니티 스타일로 통일
 
-// 로그인 상태 확인 및 토큰 검증
-async function checkAuthStatus() {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    alert("로그인이 필요합니다.");
-    window.location.href = "login.html";
-    return false;
-  }
-
-  try {
-    const response = await fetch('/api/user/profile', {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
-    });
-
-    if (response.status === 401) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      alert("로그인이 만료되었습니다. 다시 로그인해주세요.");
-      window.location.href = "login.html";
-      return false;
-    }
-
-    return true;
-  } catch (error) {
-    console.error('Auth check error:', error);
-    return true;
-  }
-}
+// 로그인 상태 확인은 CommonUtils로 이동됨
 
 // 페이지 로드 시 인증 확인
 document.addEventListener('DOMContentLoaded', async () => {
-  const isAuthenticated = await checkAuthStatus();
+  const isAuthenticated = await CommonUtils.checkAuthStatus();
   if (isAuthenticated) {
     initializeJobsPage();
   }
@@ -47,67 +15,26 @@ if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
     // DOM이 준비되면 즉시 위치 조정
     setTimeout(() => {
-      adjustMainContentPosition(false);
+      CommonUtils.adjustMainContentPosition(false);
     }, 10);
   });
 } else {
   // 이미 DOM이 준비된 경우 즉시 실행
-  adjustMainContentPosition(false);
+  CommonUtils.adjustMainContentPosition(false);
 }
 
 // 구인 정보 페이지 초기화
 function initializeJobsPage() {
   loadSavedJobs();
-  setupFilterEvents();
-  setupSearchEvents();
+  CommonUtils.setupFilterEvents(filterJobs, sortJobs);
+  CommonUtils.setupSearchEvents(searchJobs);
   renderJobs();
   setupPagination();
-  setupResizeHandler();
-  adjustMainContentPosition(false); // 초기 위치 조정 (transition 없음)
+  CommonUtils.setupResizeHandler();
+  CommonUtils.adjustMainContentPosition(false); // 초기 위치 조정 (transition 없음)
 }
 
-// 메인 콘텐츠 위치를 헤더 높이에 맞춰 조정하는 함수
-function adjustMainContentPosition(enableTransition = false) {
-  const header = document.querySelector('.header');
-  const filterSection = document.querySelector('.filter-section');
-  const mainContent = document.querySelector('.main-content');
-
-  if (header && filterSection && mainContent) {
-    if (enableTransition) {
-      // 동적 조정 시에는 애니메이션과 함께
-      setTimeout(() => {
-        mainContent.classList.add('positioned');
-
-        // 실제 헤더 높이 계산
-        const headerHeight = header.offsetHeight;
-
-        // 필터 섹션을 헤더 바로 아래에 위치시키기
-        filterSection.style.marginTop = `${headerHeight}px`;
-
-        // 전체 섹션 높이 계산
-        const totalHeight = headerHeight + filterSection.offsetHeight;
-        mainContent.style.marginTop = `${totalHeight + 20}px`;
-      }, 50);
-    } else {
-      // 초기 로드 시에는 즉시 설정
-      const headerHeight = header.offsetHeight;
-
-      // 필터 섹션을 헤더 바로 아래에 위치시키기
-      filterSection.style.marginTop = `${headerHeight}px`;
-
-      // 전체 섹션 높이 계산
-      const totalHeight = headerHeight + filterSection.offsetHeight;
-      mainContent.style.marginTop = `${totalHeight + 20}px`;
-    }
-  }
-}
-
-// 화면 크기 변경 시 메인 콘텐츠 위치 조정
-function setupResizeHandler() {
-  window.addEventListener('resize', function () {
-    adjustMainContentPosition(true); // 리사이즈 시에는 transition 사용
-  });
-}
+// 공통 함수들은 CommonUtils로 이동됨
 
 // 샘플 채용공고 데이터
 window.jobData = [
@@ -222,65 +149,7 @@ let jobsPerPage = 5;
 let currentFilter = 'all';
 let likedJobs = new Set(JSON.parse(localStorage.getItem('favoriteJobs')) || []);
 
-// 필터 이벤트 설정
-function setupFilterEvents() {
-  // 카테고리 필터 버튼
-  const filterButtons = document.querySelectorAll('.filter-button');
-  filterButtons.forEach(button => {
-    button.addEventListener('click', function () {
-      // 활성 상태 변경
-      filterButtons.forEach(btn => btn.classList.remove('active'));
-      this.classList.add('active');
-
-      // 필터 적용
-      const category = this.getAttribute('data-filter');
-      filterJobs(category);
-    });
-  });
-
-  // 고급 필터 토글
-  const advancedToggle = document.querySelector('.advanced-filter-toggle');
-  const advancedFilters = document.querySelector('.advanced-filters');
-  const mainContent = document.querySelector('.main-content');
-
-  if (advancedToggle && advancedFilters && mainContent) {
-    advancedToggle.addEventListener('click', function () {
-      advancedFilters.classList.toggle('show');
-
-      // 헤더 전체 높이를 계산하여 메인 콘텐츠 위치 조정
-      adjustMainContentPosition(true); // 동적 조정 (transition 사용)
-    });
-  }
-
-  // 정렬 옵션
-  const sortSelect = document.getElementById('sortType');
-  if (sortSelect) {
-    sortSelect.addEventListener('change', function () {
-      sortJobs(this.value);
-    });
-  }
-}
-
-// 검색 이벤트 설정
-function setupSearchEvents() {
-  const searchInput = document.getElementById('searchInput');
-  const searchBtn = document.querySelector('.search-btn');
-
-  if (searchInput) {
-    searchInput.addEventListener('keypress', handleSearchEnter);
-  }
-
-  if (searchBtn) {
-    searchBtn.addEventListener('click', searchJobs);
-  }
-}
-
-// 검색 엔터 처리
-function handleSearchEnter(event) {
-  if (event.key === 'Enter') {
-    searchJobs();
-  }
-}
+// 공통 이벤트 설정 함수들은 CommonUtils로 이동됨
 
 // 검색 기능
 function searchJobs() {
@@ -645,11 +514,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // 필터 초기화
 function resetFilters() {
-  // 모든 체크박스 해제
-  document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
-  document.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
-
-  // 필터 적용
+  CommonUtils.resetFilters();
   applyFilters();
 }
 
@@ -695,32 +560,30 @@ function applyFilters() {
 
   // 고급 필터 패널 닫기
   const advancedFilters = document.querySelector('.advanced-filters');
-  const mainContent = document.querySelector('.main-content');
 
   if (advancedFilters) {
     advancedFilters.classList.remove('show');
+    CommonUtils.removeAdvancedFiltersOutsideClick(); // 외부 클릭 이벤트 제거
   }
 
   // 메인 콘텐츠 위치 헤더 높이에 맞춰 조정
-  adjustMainContentPosition(true); // 동적 조정 (transition 사용)
+  CommonUtils.adjustMainContentPosition(true); // 동적 조정 (transition 사용)
 }
 
 // 저장된 데이터 불러오기
 function loadSavedJobs() {
   // 기존 방식과 새로운 방식 모두 지원
-  const oldSaved = localStorage.getItem('favoriteJobs');
-  const newSaved = localStorage.getItem('jobFavorites');
+  const oldSaved = CommonUtils.storage.get('favoriteJobs');
+  const newSaved = CommonUtils.storage.get('jobFavorites');
 
   if (newSaved) {
-    const favorites = JSON.parse(newSaved);
-    likedJobs = new Set(favorites.map(fav => fav.id));
+    likedJobs = new Set(newSaved.map(fav => fav.id));
   } else if (oldSaved) {
     // 기존 데이터를 새로운 형식으로 변환
-    const oldFavorites = JSON.parse(oldSaved);
-    likedJobs = new Set(oldFavorites);
+    likedJobs = new Set(oldSaved);
 
     // 새로운 형식으로 변환하여 저장
-    const newFavorites = oldFavorites.map(jobId => {
+    const newFavorites = oldSaved.map(jobId => {
       const job = window.jobData.find(j => j.id === jobId);
       return job ? {
         id: job.id,
@@ -733,16 +596,12 @@ function loadSavedJobs() {
       } : null;
     }).filter(Boolean);
 
-    localStorage.setItem('jobFavorites', JSON.stringify(newFavorites));
-    localStorage.removeItem('favoriteJobs'); // 기존 데이터 제거
+    CommonUtils.storage.set('jobFavorites', newFavorites);
+    CommonUtils.storage.remove('favoriteJobs'); // 기존 데이터 제거
   }
 }
 
 // 로그아웃
 function logout() {
-  if (confirm("로그아웃 하시겠습니까?")) {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    window.location.href = 'login.html';
-  }
+  CommonUtils.logout();
 }
