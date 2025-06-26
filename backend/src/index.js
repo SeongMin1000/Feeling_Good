@@ -11,6 +11,7 @@ const { errorHandler, notFoundHandler } = require('./middleware/errorHandler');
 // 라우터 import
 const userRoutes = require('./routes/userRoutes');
 const translateRoutes = require('./routes/translateRoutes');
+const postsRoutes = require('./routes/posts');
 
 // 기본 포트 설정
 const PORT = process.env.PORT;
@@ -48,6 +49,7 @@ if (process.env.NODE_ENV === 'development') {
 // API 라우터 등록
 app.use('/api/user', userRoutes);
 app.use('/api/translate', translateRoutes);
+app.use('/api/posts', postsRoutes);
 
 // Health check 엔드포인트
 app.get('/health', (req, res) => {
@@ -69,7 +71,6 @@ app.get('/', (req, res) => {
 });
 
 // 404 핸들러 (API 경로에만 적용)
-app.use('/api/*', notFoundHandler);
 
 // 전역 에러 핸들러
 app.use(errorHandler);
