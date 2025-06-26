@@ -14,6 +14,11 @@ class Translator {
     // 단일 텍스트 번역
     async translateText(text, targetLanguage = this.currentLanguage) {
         try {
+            // 한국어로 번역하는 경우 또는 텍스트가 비어있는 경우 원본 반환
+            if (targetLanguage === '한국어' || !text || !text.trim()) {
+                return text;
+            }
+
             const response = await fetch(`${this.apiBaseUrl}/translate`, {
                 method: 'POST',
                 headers: {
@@ -41,6 +46,11 @@ class Translator {
     // 여러 텍스트 번역
     async translateMultiple(texts, targetLanguage = this.currentLanguage) {
         try {
+            // 한국어로 번역하는 경우 원본 반환
+            if (targetLanguage === '한국어') {
+                return texts;
+            }
+
             const response = await fetch(`${this.apiBaseUrl}/translate-multiple`, {
                 method: 'POST',
                 headers: {

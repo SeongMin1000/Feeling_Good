@@ -71,10 +71,10 @@
                     <div class="profile-info">
                         <h2 id="username-display">사용자명</h2>
                         <p id="email-display">이메일</p>
-                        <span class="profile-status">활성</span>
+                        <span class="profile-status" data-translate="활성">활성</span>
                     </div>
                     <button class="btn btn-outline" onclick="editProfile()">
-                        <i class="fas fa-edit"></i> 프로필 수정
+                        <i class="fas fa-edit"></i> <span data-translate="프로필 수정">프로필 수정</span>
                     </button>
                 </div>
 
@@ -82,24 +82,24 @@
                     <!-- 기본 정보 카드 -->
                     <div class="info-card">
                         <div class="card-header">
-                            <h3><i class="fas fa-user"></i> 기본 정보</h3>
+                            <h3><i class="fas fa-user"></i> <span data-translate="기본 정보">기본 정보</span></h3>
                         </div>
                         <div class="card-content">
                             <div class="info-grid">
                                 <div class="info-item">
-                                    <span class="info-label">이름/닉네임</span>
+                                    <span class="info-label" data-translate="이름/닉네임">이름/닉네임</span>
                                     <span class="info-value" id="username"></span>
                                 </div>
                                 <div class="info-item">
-                                    <span class="info-label">나이</span>
+                                    <span class="info-label" data-translate="나이">나이</span>
                                     <span class="info-value" id="age"></span>
                                 </div>
                                 <div class="info-item">
-                                    <span class="info-label">성별</span>
+                                    <span class="info-label" data-translate="성별">성별</span>
                                     <span class="info-value" id="gender"></span>
                                 </div>
                                 <div class="info-item">
-                                    <span class="info-label">전화번호</span>
+                                    <span class="info-label" data-translate="전화번호">전화번호</span>
                                     <span class="info-value" id="phone"></span>
                                 </div>
                             </div>
@@ -109,20 +109,20 @@
                     <!-- 체류 정보 카드 -->
                     <div class="info-card">
                         <div class="card-header">
-                            <h3><i class="fas fa-passport"></i> 체류 정보</h3>
+                            <h3><i class="fas fa-passport"></i> <span data-translate="체류 정보">체류 정보</span></h3>
                         </div>
                         <div class="card-content">
                             <div class="info-grid">
                                 <div class="info-item">
-                                    <span class="info-label">국적</span>
+                                    <span class="info-label" data-translate="국적">국적</span>
                                     <span class="info-value" id="nationality"></span>
                                 </div>
                                 <div class="info-item">
-                                    <span class="info-label">비자 종류</span>
+                                    <span class="info-label" data-translate="비자 종류">비자 종류</span>
                                     <span class="info-value" id="visaType"></span>
                                 </div>
                                 <div class="info-item full-width">
-                                    <span class="info-label">비자 만료일</span>
+                                    <span class="info-label" data-translate="비자 만료일">비자 만료일</span>
                                     <span class="info-value" id="visaExpiry"></span>
                                 </div>
                             </div>
@@ -132,16 +132,17 @@
                     <!-- 거주/근무 조건 카드 -->
                     <div class="info-card">
                         <div class="card-header">
-                            <h3><i class="fas fa-map-marker-alt"></i> 거주/근무 조건</h3>
+                            <h3><i class="fas fa-map-marker-alt"></i> <span data-translate="거주/근무 조건">거주/근무 조건</span>
+                            </h3>
                         </div>
                         <div class="card-content">
                             <div class="info-grid">
                                 <div class="info-item">
-                                    <span class="info-label">현재 거주 지역</span>
+                                    <span class="info-label" data-translate="현재 거주 지역">현재 거주 지역</span>
                                     <span class="info-value" id="currentLocation"></span>
                                 </div>
                                 <div class="info-item">
-                                    <span class="info-label">희망 근무형태</span>
+                                    <span class="info-label" data-translate="희망 근무형태">희망 근무형태</span>
                                     <span class="info-value" id="workType"></span>
                                 </div>
                             </div>
@@ -151,24 +152,24 @@
                     <!-- 언어/직무 정보 카드 -->
                     <div class="info-card">
                         <div class="card-header">
-                            <h3><i class="fas fa-language"></i> 언어 & 직무 정보</h3>
+                            <h3><i class="fas fa-language"></i> <span data-translate="언어 & 직무 정보">언어 & 직무 정보</span></h3>
                         </div>
                         <div class="card-content">
                             <div class="info-grid">
                                 <div class="info-item">
-                                    <span class="info-label">선호 UI 언어</span>
+                                    <span class="info-label" data-translate="선호 UI 언어">선호 UI 언어</span>
                                     <span class="info-value" id="preferredLanguage"></span>
                                 </div>
                                 <div class="info-item">
-                                    <span class="info-label">한국어 능력</span>
+                                    <span class="info-label" data-translate="한국어 능력">한국어 능력</span>
                                     <span class="info-value" id="koreanLevel"></span>
                                 </div>
                                 <div class="info-item">
-                                    <span class="info-label">희망 직종/산업군</span>
+                                    <span class="info-label" data-translate="희망 직종/산업군">희망 직종/산업군</span>
                                     <span class="info-value" id="desiredIndustry"></span>
                                 </div>
                                 <div class="info-item">
-                                    <span class="info-label">직무 경력</span>
+                                    <span class="info-label" data-translate="직무 경력">직무 경력</span>
                                     <span class="info-value" id="workExperience"></span>
                                 </div>
                             </div>
@@ -180,7 +181,7 @@
             <!-- 관심 채용공고 탭 -->
             <div id="favorites-tab" class="tab-content-section">
                 <div class="section-header">
-                    <h2><i class="fas fa-heart"></i> 관심 등록한 채용공고</h2>
+                    <h2><i class="fas fa-heart"></i> <span data-translate="관심 등록한 채용공고">관심 등록한 채용공고</span></h2>
                     <span class="count-badge" id="favoritesCount">0</span>
                 </div>
                 <div class="favorites-container">
@@ -189,10 +190,10 @@
                     </div>
                     <div id="noFavorites" class="empty-state" style="display: none;">
                         <i class="fas fa-heart-broken"></i>
-                        <h3>관심 등록한 채용공고가 없습니다</h3>
-                        <p>채용정보 페이지에서 마음에 드는 공고에 하트를 눌러보세요!</p>
+                        <h3 data-translate="관심 등록한 채용공고가 없습니다">관심 등록한 채용공고가 없습니다</h3>
+                        <p data-translate="채용정보 페이지에서 마음에 드는 공고에 하트를 눌러보세요!">채용정보 페이지에서 마음에 드는 공고에 하트를 눌러보세요!</p>
                         <a href="jobs.html" class="btn btn-primary">
-                            <i class="fas fa-search"></i> 채용정보 보러가기
+                            <i class="fas fa-search"></i> <span data-translate="채용정보 보러가기">채용정보 보러가기</span>
                         </a>
                     </div>
                 </div>
@@ -201,13 +202,13 @@
             <!-- 지원 현황 탭 -->
             <div id="applications-tab" class="tab-content-section">
                 <div class="section-header">
-                    <h2><i class="fas fa-file-alt"></i> 지원 현황</h2>
+                    <h2><i class="fas fa-file-alt"></i> <span data-translate="지원 현황">지원 현황</span></h2>
                 </div>
                 <div class="applications-container">
                     <div class="empty-state">
                         <i class="fas fa-clipboard-list"></i>
-                        <h3>지원한 채용공고가 없습니다</h3>
-                        <p>관심 있는 채용공고에 지원해보세요!</p>
+                        <h3 data-translate="지원한 채용공고가 없습니다">지원한 채용공고가 없습니다</h3>
+                        <p data-translate="관심 있는 채용공고에 지원해보세요!">관심 있는 채용공고에 지원해보세요!</p>
                     </div>
                 </div>
             </div>
@@ -215,18 +216,19 @@
             <!-- 설정 탭 -->
             <div id="settings-tab" class="tab-content-section">
                 <div class="section-header">
-                    <h2><i class="fas fa-cog"></i> 계정 설정</h2>
+                    <h2><i class="fas fa-cog"></i> <span data-translate="계정 설정">계정 설정</span></h2>
                 </div>
                 <div class="settings-container">
                     <div class="settings-card">
                         <div class="card-header">
-                            <h3><i class="fas fa-bell"></i> 알림 설정</h3>
+                            <h3><i class="fas fa-bell"></i> <span data-translate="알림 설정">알림 설정</span></h3>
                         </div>
                         <div class="card-content">
                             <div class="setting-item">
                                 <div class="setting-info">
-                                    <span class="setting-name">새로운 채용공고 알림</span>
-                                    <span class="setting-desc">관심 분야의 새로운 채용공고를 알려드립니다</span>
+                                    <span class="setting-name" data-translate="새로운 채용공고 알림">새로운 채용공고 알림</span>
+                                    <span class="setting-desc" data-translate="관심 분야의 새로운 채용공고를 알려드립니다">관심 분야의 새로운 채용공고를
+                                        알려드립니다</span>
                                 </div>
                                 <label class="toggle-switch">
                                     <input type="checkbox" checked>
@@ -235,8 +237,9 @@
                             </div>
                             <div class="setting-item">
                                 <div class="setting-info">
-                                    <span class="setting-name">커뮤니티 알림</span>
-                                    <span class="setting-desc">댓글, 좋아요 등의 활동을 알려드립니다</span>
+                                    <span class="setting-name" data-translate="커뮤니티 알림">커뮤니티 알림</span>
+                                    <span class="setting-desc" data-translate="댓글, 좋아요 등의 활동을 알려드립니다">댓글, 좋아요 등의 활동을
+                                        알려드립니다</span>
                                 </div>
                                 <label class="toggle-switch">
                                     <input type="checkbox">
@@ -248,14 +251,14 @@
 
                     <div class="settings-card">
                         <div class="card-header">
-                            <h3><i class="fas fa-shield-alt"></i> 계정 보안</h3>
+                            <h3><i class="fas fa-shield-alt"></i> <span data-translate="계정 보안">계정 보안</span></h3>
                         </div>
                         <div class="card-content">
                             <button class="btn btn-outline setting-btn">
-                                <i class="fas fa-key"></i> 비밀번호 변경
+                                <i class="fas fa-key"></i> <span data-translate="비밀번호 변경">비밀번호 변경</span>
                             </button>
                             <button class="btn btn-outline setting-btn">
-                                <i class="fas fa-trash-alt"></i> 계정 삭제
+                                <i class="fas fa-trash-alt"></i> <span data-translate="계정 삭제">계정 삭제</span>
                             </button>
                         </div>
                     </div>

@@ -151,12 +151,13 @@
       <div class="search-bar">
         <div class="search-input-group">
           <select id="searchType" class="search-select">
-            <option value="title">직무명</option>
-            <option value="company">회사명</option>
-            <option value="location">지역</option>
-            <option value="all">전체</option>
+            <option value="title" data-translate="직무명">직무명</option>
+            <option value="company" data-translate="회사명">회사명</option>
+            <option value="location" data-translate="지역">지역</option>
+            <option value="all" data-translate="전체">전체</option>
           </select>
-          <input type="text" id="searchInput" placeholder="검색어를 입력하세요..." onkeypress="handleSearchEnter(event)">
+          <input type="text" id="searchInput" placeholder="검색어를 입력하세요..." data-translate-placeholder="검색어를 입력하세요..."
+            onkeypress="handleSearchEnter(event)">
           <button class="search-btn" onclick="searchJobs()">
             <i class="fas fa-search"></i>
           </button>
@@ -166,13 +167,13 @@
       <!-- 채용공고 목록 헤더 -->
       <div class="jobs-header">
         <div class="jobs-count">
-          총 <span id="jobsCount">0</span>개의 채용공고
+          <span data-translate="총">총</span> <span id="jobsCount">0</span><span data-translate="개의 채용공고">개의 채용공고</span>
         </div>
         <div class="sort-options">
           <select id="sortType" onchange="sortJobs(this.value)">
-            <option value="latest">최신순</option>
-            <option value="deadline">마감순</option>
-            <option value="salary">급여순</option>
+            <option value="latest" data-translate="최신순">최신순</option>
+            <option value="deadline" data-translate="마감순">마감순</option>
+            <option value="salary" data-translate="급여순">급여순</option>
           </select>
         </div>
       </div>
@@ -205,7 +206,8 @@
         <div class="form-row">
           <div class="form-group">
             <label for="jobTitle">직무명 *</label>
-            <input type="text" id="jobTitle" name="title" required placeholder="예: 프론트엔드 개발자">
+            <input type="text" id="jobTitle" name="title" required placeholder="예: 프론트엔드 개발자"
+              data-translate-placeholder="예: 프론트엔드 개발자">
           </div>
           <div class="form-group">
             <label for="companyName">회사명 *</label>
@@ -273,7 +275,8 @@
           </div>
           <div class="form-group">
             <label for="logoUrl">로고 URL</label>
-            <input type="url" id="logoUrl" name="logo" placeholder="https://example.com/logo.png">
+            <input type="url" id="logoUrl" name="logo" placeholder="https://example.com/logo.png"
+              data-translate-placeholder="https://example.com/logo.png">
           </div>
         </div>
 

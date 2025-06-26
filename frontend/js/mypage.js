@@ -98,21 +98,26 @@ function loadFavoriteJobs() {
         <div class="favorite-item" data-job-id="${job.id}">
             <div class="favorite-header">
                 <div class="favorite-title">
-                    <h4>${job.title}</h4>
-                    <div class="favorite-company">${job.company}</div>
+                    <h4 data-translate="${job.title}">${job.title}</h4>
+                    <div class="favorite-company" data-translate="${job.company}">${job.company}</div>
                 </div>
                 <button class="remove-favorite" onclick="removeFavorite('${job.id}')" title="관심 해제">
                     <i class="fas fa-heart"></i>
                 </button>
             </div>
             <div class="favorite-meta">
-                <span><i class="fas fa-map-marker-alt"></i> ${job.location}</span>
-                <span><i class="fas fa-won-sign"></i> ${job.salary}</span>
-                <span><i class="fas fa-clock"></i> ${job.workType}</span>
+                <span><i class="fas fa-map-marker-alt"></i> <span data-translate="${job.location}">${job.location}</span></span>
+                <span><i class="fas fa-won-sign"></i> <span data-translate="${job.salary}">${job.salary}</span></span>
+                <span><i class="fas fa-clock"></i> <span data-translate="${job.workType}">${job.workType}</span></span>
                 <span><i class="fas fa-calendar-plus"></i> ${formatDate(job.dateAdded)}</span>
             </div>
         </div>
     `).join('');
+
+  // 번역 적용
+  if (window.translator) {
+    window.translator.updateUILanguage();
+  }
 }
 
 // 관심 채용공고 제거

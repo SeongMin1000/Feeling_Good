@@ -140,13 +140,13 @@
             <div class="search-bar">
                 <div class="search-input-group">
                     <select id="searchType" class="search-select">
-                        <option value="title">제목</option>
-                        <option value="content">내용</option>
-                        <option value="author">작성자</option>
-                        <option value="all">전체</option>
+                        <option value="title" data-translate="제목">제목</option>
+                        <option value="content" data-translate="내용">내용</option>
+                        <option value="author" data-translate="작성자">작성자</option>
+                        <option value="all" data-translate="전체">전체</option>
                     </select>
                     <input type="text" id="searchInput" placeholder="검색어를 입력하세요..."
-                        onkeypress="handleSearchEnter(event)">
+                        data-translate-placeholder="검색어를 입력하세요..." onkeypress="handleSearchEnter(event)">
                     <button class="search-btn" onclick="searchPosts()">
                         <i class="fas fa-search"></i>
                     </button>
@@ -157,13 +157,14 @@
             <div class="posts-container">
                 <div class="posts-header">
                     <div class="posts-count">
-                        총 <span id="postsCount">0</span>개의 게시글
+                        <span data-translate="총">총</span> <span id="postsCount">0</span><span data-translate="개의 게시글">개의
+                            게시글</span>
                     </div>
                     <div class="sort-options">
                         <select id="sortType" onchange="sortPosts(this.value)">
-                            <option value="latest">최신순</option>
-                            <option value="popular">인기순</option>
-                            <option value="comments">댓글순</option>
+                            <option value="latest" data-translate="최신순">최신순</option>
+                            <option value="popular" data-translate="인기순">인기순</option>
+                            <option value="comments" data-translate="댓글순">댓글순</option>
                         </select>
                     </div>
                 </div>
@@ -206,7 +207,8 @@
 
                 <div class="form-group">
                     <label for="postTitle">제목 *</label>
-                    <input type="text" id="postTitle" name="title" required placeholder="제목을 입력하세요">
+                    <input type="text" id="postTitle" name="title" required placeholder="제목을 입력하세요"
+                        data-translate-placeholder="제목을 입력하세요">
                 </div>
 
                 <div class="form-group">
@@ -271,11 +273,13 @@
                 <!-- 댓글 섹션 -->
                 <div class="comments-section">
                     <div class="comments-header">
-                        <h3>댓글 <span id="commentsCount">0</span>개</h3>
+                        <h3><span data-translate="댓글">댓글</span> <span id="commentsCount">0</span><span
+                                data-translate="개">개</span></h3>
                     </div>
 
                     <div class="comment-write">
-                        <textarea id="commentInput" placeholder="댓글을 입력하세요..." rows="3"></textarea>
+                        <textarea id="commentInput" placeholder="댓글을 입력하세요..." data-translate-placeholder="댓글을 입력하세요..."
+                            rows="3"></textarea>
                         <button class="btn btn-primary comment-submit" onclick="addComment()">
                             <i class="fas fa-paper-plane"></i> 댓글 작성
                         </button>

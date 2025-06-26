@@ -368,8 +368,8 @@ function renderJobs() {
     jobsList.innerHTML = `
       <div class="empty-state">
         <i class="fas fa-briefcase"></i>
-        <h3>검색 결과가 없습니다</h3>
-        <p>다른 검색어나 필터를 시도해보세요.</p>
+        <h3 data-translate="검색 결과가 없습니다">검색 결과가 없습니다</h3>
+        <p data-translate="다른 검색어나 필터를 시도해보세요.">다른 검색어나 필터를 시도해보세요.</p>
       </div>
     `;
   } else {
@@ -379,6 +379,11 @@ function renderJobs() {
   // 총 개수 업데이트
   if (jobsCount) {
     jobsCount.textContent = filteredJobs.length;
+  }
+
+  // 번역 적용
+  if (window.translator) {
+    window.translator.updateUILanguage();
   }
 }
 
@@ -395,9 +400,9 @@ function createJobCard(job) {
     <div class="job-item" data-job-id="${job.id}">
       <div class="job-header">
         <div class="job-info">
-          <div class="job-title">${job.title}</div>
-          <div class="company-name">${job.company}</div>
-          <span class="job-category">${getCategoryName(job.category)}</span>
+          <div class="job-title" data-translate="${job.title}">${job.title}</div>
+          <div class="company-name" data-translate="${job.company}">${job.company}</div>
+          <span class="job-category" data-translate="${getCategoryName(job.category)}">${getCategoryName(job.category)}</span>
         </div>
         <img src="${job.logo}" alt="${job.company} 로고" class="company-logo">
       </div>
@@ -405,30 +410,30 @@ function createJobCard(job) {
       <div class="job-details">
         <div class="detail-item">
           <i class="fas fa-map-marker-alt"></i>
-          <span>${job.location}</span>
+          <span data-translate="${job.location}">${job.location}</span>
         </div>
         <div class="detail-item">
           <i class="fas fa-briefcase"></i>
-          <span>${job.employment}</span>
+          <span data-translate="${job.employment}">${job.employment}</span>
         </div>
         <div class="detail-item">
           <i class="fas fa-won-sign"></i>
-          <span>${salaryText}</span>
+          <span data-translate="${salaryText}">${salaryText}</span>
         </div>
         <div class="detail-item">
           <i class="fas fa-passport"></i>
-          <span>${visaText}</span>
+          <span data-translate="${visaText}">${visaText}</span>
         </div>
       </div>
       
-      <div class="job-description">
+      <div class="job-description" data-translate="${job.description}">
         ${job.description}
       </div>
       
       <div class="job-meta">
         <div class="job-date">
           <i class="fas fa-calendar"></i>
-          <span>마감: ${job.deadline} (${daysLeft}일 남음)</span>
+          <span data-translate="마감: ${job.deadline} (${daysLeft}일 남음)">마감: ${job.deadline} (${daysLeft}일 남음)</span>
         </div>
         <div class="job-actions">
           <button class="action-btn ${isLiked ? 'active' : ''}" onclick="toggleLike(${job.id})">
