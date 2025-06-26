@@ -1,3 +1,17 @@
+// 비밀번호 표시/숨기기 토글 함수
+function togglePassword(inputId) {
+    const passwordInput = document.getElementById(inputId);
+    const toggleIcon = document.getElementById(inputId + '-toggle-icon');
+
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.className = 'fas fa-eye-slash';
+    } else {
+        passwordInput.type = 'password';
+        toggleIcon.className = 'fas fa-eye';
+    }
+}
+
 // 회원 유형에 따른 필드 표시/숨김 처리
 document.getElementById('userType').addEventListener('change', function () {
     const userType = this.value;
