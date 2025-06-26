@@ -7,41 +7,101 @@
   <title>로그인 - Feeling Good</title>
   <link rel="stylesheet" href="../css/common.css">
   <link rel="stylesheet" href="../css/login.css">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 
 <body>
-  <div class="auth-container">
-    <!-- 언어 선택 버튼 -->
-    <div style="position: absolute; top: 20px; right: 20px;">
-      <a href="#" id="languageSelector" style="color: #666; text-decoration: none; font-size: 14px;">
-        <i class="fas fa-globe"></i> <span data-translate="Language">Language</span>
-      </a>
+  <!-- 상단 헤더 -->
+  <header class="auth-header">
+    <div class="auth-header-content">
+      <div class="logo">
+        <i class="fas fa-briefcase"></i>
+        <span>Feeling Good</span>
+      </div>
+      <div class="header-buttons">
+        <a href="#" id="languageSelector" class="language-btn">
+          <i class="fas fa-globe"></i>
+          <span data-translate="Language">Language</span>
+        </a>
+      </div>
     </div>
+  </header>
 
-    <h1 data-translate="로그인">로그인</h1>
-    <form id="loginForm" class="auth-form">
-      <div class="form-group">
-        <label for="email" data-translate="이메일">이메일</label>
-        <input type="email" id="email" name="email" required placeholder="이메일을 입력하세요"
-          data-translate-placeholder="이메일을 입력하세요">
+  <!-- 메인 콘텐츠 -->
+  <div class="auth-main">
+    <div class="auth-container">
+      <div class="auth-header-section">
+        <h1><i class="fas fa-sign-in-alt"></i> <span data-translate="로그인">로그인</span></h1>
+        <p data-translate="계정에 로그인하여 Feeling Good을 이용하세요">계정에 로그인하여 Feeling Good을 이용하세요</p>
       </div>
-      <div class="form-group">
-        <label for="password" data-translate="비밀번호">비밀번호</label>
-        <input type="password" id="password" name="password" required placeholder="비밀번호를 입력하세요"
-          data-translate-placeholder="비밀번호를 입력하세요">
+
+      <form id="loginForm" class="auth-form">
+        <div class="form-group">
+          <label for="email">
+            <i class="fas fa-envelope"></i>
+            <span data-translate="이메일">이메일</span>
+          </label>
+          <input type="email" id="email" name="email" required placeholder="이메일을 입력하세요"
+            data-translate-placeholder="이메일을 입력하세요">
+        </div>
+
+        <div class="form-group">
+          <label for="password">
+            <i class="fas fa-lock"></i>
+            <span data-translate="비밀번호">비밀번호</span>
+          </label>
+          <div class="password-input-group">
+            <input type="password" id="password" name="password" required placeholder="비밀번호를 입력하세요"
+              data-translate-placeholder="비밀번호를 입력하세요">
+            <button type="button" class="password-toggle" onclick="togglePassword()">
+              <i class="fas fa-eye" id="passwordToggleIcon"></i>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="auth-button">
+          <i class="fas fa-sign-in-alt"></i>
+          <span data-translate="로그인">로그인</span>
+        </button>
+      </form>
+
+      <div class="auth-divider">
+        <span data-translate="또는">또는</span>
       </div>
-      <button type="submit" class="auth-button" data-translate="로그인">로그인</button>
-    </form>
-    <p class="auth-link">
-      <span data-translate="계정이 없으신가요?">계정이 없으신가요?</span>
-      <a href="register.html" data-translate="회원가입하기">회원가입하기</a>
-    </p>
+
+      <div class="auth-links">
+        <p class="auth-link">
+          <span data-translate="계정이 없으신가요?">계정이 없으신가요?</span>
+          <a href="register.html">
+            <i class="fas fa-user-plus"></i>
+            <span data-translate="회원가입하기">회원가입하기</span>
+          </a>
+        </p>
+      </div>
+    </div>
   </div>
 
+  <script src="../js/common.js"></script>
   <script src="../js/translate.js"></script>
   <script src="../js/login.js"></script>
   <script>
+    // 비밀번호 표시/숨기기 토글
+    function togglePassword() {
+      const passwordInput = document.getElementById('password');
+      const toggleIcon = document.getElementById('passwordToggleIcon');
+
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.classList.remove('fa-eye');
+        toggleIcon.classList.add('fa-eye-slash');
+      } else {
+        passwordInput.type = 'password';
+        toggleIcon.classList.remove('fa-eye-slash');
+        toggleIcon.classList.add('fa-eye');
+      }
+    }
+
     // 페이지 로드 시 언어 선택 기능 연결
     document.addEventListener('DOMContentLoaded', () => {
       const languageButton = document.getElementById('languageSelector');
