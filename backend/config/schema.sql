@@ -68,31 +68,31 @@ CREATE TABLE user_misc (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- 7. 게시물 정보
+-- 7. 게시물 정보 (커뮤니티용)
 CREATE TABLE posts (
-  id INT AUTO_INCREMENT PRIMARY KEY,                  -- 게시글 고유 ID
-  title VARCHAR(255) NOT NULL,                        -- 게시글 제목
-  content LONGTEXT NOT NULL,                          -- 본문 (이미지 포함 가능)
-  author_id INT NOT NULL,                             -- 작성자 ID (users.id 참조)
-
-  like_count INT DEFAULT 0,                           -- 좋아요 수
-  comment_count INT DEFAULT 0,                        -- 댓글 수 (캐싱용)
-  views INT DEFAULT 0,                                -- 조회수
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,      -- 작성 시각
-  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP       -- 수정 시각
-              ON UPDATE CURRENT_TIMESTAMP,
-
-  FOREIGN KEY (author_id) REFERENCES users(id),
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    content LONGTEXT NOT NULL,
+    author_id INT NOT NULL,
+    author_name VARCHAR(100) NOT NULL,  -- 익명 처리를 위한 필드
+    category ENUM('job-info', 'life-tips', 'qna', 'free-talk') NOT NULL,
+    is_anonymous BOOLEAN DEFAULT FALSE,
+    like_count INT DEFAULT 0,
+    comment_count INT DEFAULT 0,
+    views INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- 8. 댓글 정보
+-- 8. 댓글 정보 (커뮤니티용)
 CREATE TABLE comments (
-  id INT AUTO_INCREMENT PRIMARY KEY,                  -- 댓글 고유 ID
-  post_id INT NOT NULL,                               -- 연결된 게시글 ID (posts.id 참조)
-  author_id INT NOT NULL,                             -- 댓글 작성자 ID (users.id 참조)
-  content TEXT NOT NULL,                              -- 댓글 내용
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,      -- 작성 시각
-
-  FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
-  FOREIGN KEY (author_id) REFERENCES users(id)
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    post_id INT NOT NULL,
+    author_id INT NOT NULL,
+    author_name VARCHAR(100) NOT NULL,  -- 익명 처리를 위한 필드
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
+    FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE
 );
