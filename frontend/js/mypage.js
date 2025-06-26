@@ -1,95 +1,226 @@
 // 페이지 로드 시 사용자 정보 가져오기
-document.addEventListener('DOMContentLoaded', async () => {
-  await loadUserProfile();
+document.addEventListener('DOMContentLoaded', function () {
+  loadUserProfile();
+  loadFavoriteJobs();
+  initializeDefaultTab();
 });
 
-// 사용자 프로필 로드
-async function loadUserProfile() {
-  // 로그인 체크
-  const token = localStorage.getItem('token');
-  if (!token) {
-    alert('로그인이 필요합니다.');
-    window.location.href = 'login.html';
+// 기본 탭 초기화
+function initializeDefaultTab() {
+  switchTab('profile');
+}
+
+// 탭 전환 기능
+function switchTab(tabName) {
+  // 모든 탭 버튼과 콘텐츠 비활성화
+  document.querySelectorAll('.tab-button').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  document.querySelectorAll('.tab-content-section').forEach(content => {
+    content.classList.remove('active');
+  });
+
+  // 선택된 탭 활성화
+  const activeButton = document.querySelector(`[data-tab="${tabName}"]`);
+  const activeContent = document.getElementById(`${tabName}-tab`);
+
+  if (activeButton && activeContent) {
+    activeButton.classList.add('active');
+    activeContent.classList.add('active');
+  }
+
+  // 관심 채용공고 탭을 선택했을 때 목록 업데이트
+  if (tabName === 'favorites') {
+    loadFavoriteJobs();
+  }
+}
+
+// 사용자 프로필 정보 로드
+function loadUserProfile() {
+  const userData = JSON.parse(localStorage.getItem('userData')) || {};
+
+  // 기본값 설정
+  const profile = {
+    username: userData.username || '사용자',
+    email: userData.email || 'user@example.com',
+    age: userData.age || '25',
+    gender: userData.gender || '남성',
+    phone: userData.phone || '010-1234-5678',
+    nationality: userData.nationality || '베트남',
+    visaType: userData.visaType || 'E-9 (비전문취업)',
+    visaExpiry: userData.visaExpiry || '2025-12-31',
+    currentLocation: userData.currentLocation || '서울특별시 강남구',
+    workType: userData.workType || '정규직',
+    preferredLanguage: userData.preferredLanguage || '한국어',
+    koreanLevel: userData.koreanLevel || '중급',
+    desiredIndustry: userData.desiredIndustry || '제조업',
+    workExperience: userData.workExperience || '2년'
+  };
+
+  // 프로필 정보 표시
+  document.getElementById('username-display').textContent = profile.username;
+  document.getElementById('email-display').textContent = profile.email;
+  document.getElementById('username').textContent = profile.username;
+  document.getElementById('age').textContent = profile.age;
+  document.getElementById('gender').textContent = profile.gender;
+  document.getElementById('phone').textContent = profile.phone;
+  document.getElementById('nationality').textContent = profile.nationality;
+  document.getElementById('visaType').textContent = profile.visaType;
+  document.getElementById('visaExpiry').textContent = profile.visaExpiry;
+  document.getElementById('currentLocation').textContent = profile.currentLocation;
+  document.getElementById('workType').textContent = profile.workType;
+  document.getElementById('preferredLanguage').textContent = profile.preferredLanguage;
+  document.getElementById('koreanLevel').textContent = profile.koreanLevel;
+  document.getElementById('desiredIndustry').textContent = profile.desiredIndustry;
+  document.getElementById('workExperience').textContent = profile.workExperience;
+}
+
+// 관심 채용공고 로드
+function loadFavoriteJobs() {
+  const favorites = JSON.parse(localStorage.getItem('jobFavorites')) || [];
+  const favoritesList = document.getElementById('favoritesList');
+  const noFavorites = document.getElementById('noFavorites');
+  const favoritesCount = document.getElementById('favoritesCount');
+
+  // 카운트 업데이트
+  favoritesCount.textContent = favorites.length;
+
+  if (favorites.length === 0) {
+    favoritesList.innerHTML = '';
+    noFavorites.style.display = 'block';
     return;
   }
 
-  try {
-    // 사용자 정보 가져오기
-    const response = await fetch('/api/user/profile', {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
-    });
+  noFavorites.style.display = 'none';
 
-    if (response.status === 401) {
-      // 토큰이 만료되었거나 유효하지 않음
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      alert('로그인이 만료되었습니다. 다시 로그인해주세요.');
-      window.location.href = 'login.html';
-      return;
-    }
+  // 관심 채용공고 목록 생성
+  favoritesList.innerHTML = favorites.map(job => `
+        <div class="favorite-item" data-job-id="${job.id}">
+            <div class="favorite-header">
+                <div class="favorite-title">
+                    <h4>${job.title}</h4>
+                    <div class="favorite-company">${job.company}</div>
+                </div>
+                <button class="remove-favorite" onclick="removeFavorite('${job.id}')" title="관심 해제">
+                    <i class="fas fa-heart"></i>
+                </button>
+            </div>
+            <div class="favorite-meta">
+                <span><i class="fas fa-map-marker-alt"></i> ${job.location}</span>
+                <span><i class="fas fa-won-sign"></i> ${job.salary}</span>
+                <span><i class="fas fa-clock"></i> ${job.workType}</span>
+                <span><i class="fas fa-calendar-plus"></i> ${formatDate(job.dateAdded)}</span>
+            </div>
+        </div>
+    `).join('');
+}
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+// 관심 채용공고 제거
+function removeFavorite(jobId) {
+  if (confirm('이 채용공고를 관심 목록에서 제거하시겠습니까?')) {
+    let favorites = JSON.parse(localStorage.getItem('jobFavorites')) || [];
+    favorites = favorites.filter(job => job.id !== jobId);
+    localStorage.setItem('jobFavorites', JSON.stringify(favorites));
+    loadFavoriteJobs();
 
-    const result = await response.json();
-    displayUserInfo(result.user);
-  } catch (error) {
-    console.error('Profile Load Error:', error);
-    alert('사용자 정보를 불러오는데 실패했습니다.');
+    // 성공 메시지
+    showToast('관심 목록에서 제거되었습니다.', 'success');
   }
 }
 
-// 사용자 정보 화면에 표시
-function displayUserInfo(userData) {
-  // 기본 정보
-  setElementText('username', userData.username);
-  setElementText('age', userData.age);
-  setElementText('gender', userData.gender);
-  setElementText('email', userData.email);
-  setElementText('phone', userData.phone);
-
-  // 체류 정보
-  setElementText('nationality', userData.nationality);
-  setElementText('visaType', userData.visa_type);
-  setElementText('visaExpiry', userData.visa_expiry_date ?
-    new Date(userData.visa_expiry_date).toLocaleDateString('ko-KR') : null);
-
-  // 거주/근무 조건
-  setElementText('currentLocation', userData.current_location);
-  setElementText('workType', userData.work_type);
-
-  // 언어 정보
-  setElementText('preferredLanguage', userData.preferred_language);
-  setElementText('koreanLevel', userData.korean_level);
-
-  // 직무/경력 정보
-  setElementText('desiredIndustry', userData.desired_industry);
-  setElementText('workExperience', userData.work_experience);
-}
-
-// 요소에 텍스트 설정 (null 체크 포함)
-function setElementText(elementId, value) {
-  const element = document.getElementById(elementId);
-  if (element) {
-    element.textContent = value || '-';
-  }
-}
-
-// 🔙 뒤로 가기 버튼 기능
-function goBack() {
-  window.history.back();
+// 프로필 편집 기능
+function editProfile() {
+  alert('프로필 편집 기능은 준비 중입니다.');
 }
 
 // 로그아웃 기능
 function logout() {
   if (confirm('로그아웃 하시겠습니까?')) {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    localStorage.removeItem('userData');
+    localStorage.removeItem('userToken');
     window.location.href = 'login.html';
   }
 }
+
+// 날짜 포맷팅
+function formatDate(dateString) {
+  if (!dateString) return '방금 전';
+
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffTime = Math.abs(now - date);
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+  if (diffDays === 1) {
+    return '1일 전';
+  } else if (diffDays < 7) {
+    return `${diffDays}일 전`;
+  } else if (diffDays < 30) {
+    const weeks = Math.floor(diffDays / 7);
+    return `${weeks}주 전`;
+  } else {
+    return date.toLocaleDateString('ko-KR');
+  }
+}
+
+// 토스트 메시지 표시
+function showToast(message, type = 'info') {
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+  toast.innerHTML = `
+        <div class="toast-content">
+            <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-info-circle'}"></i>
+            <span>${message}</span>
+        </div>
+    `;
+
+  // 토스트 스타일
+  toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'success' ? '#28a745' : '#007bff'};
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 10000;
+        opacity: 0;
+        transform: translateX(100%);
+        transition: all 0.3s ease;
+    `;
+
+  document.body.appendChild(toast);
+
+  // 애니메이션
+  setTimeout(() => {
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateX(0)';
+  }, 100);
+
+  // 자동 제거
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateX(100%)';
+    setTimeout(() => {
+      if (toast.parentNode) {
+        toast.parentNode.removeChild(toast);
+      }
+    }, 300);
+  }, 3000);
+}
+
+// 페이지 이동 함수들
+function goToJobs() {
+  window.location.href = 'jobs.html';
+}
+
+function goToCommunity() {
+  window.location.href = 'community.html';
+}
+
+// 전역 함수로 노출
+window.switchTab = switchTab;
+window.removeFavorite = removeFavorite;
+window.editProfile = editProfile;
+window.logout = logout;

@@ -62,6 +62,13 @@ body {
     padding: 0.5rem 1rem;
     border-radius: 5px;
     transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.nav-link i {
+    font-size: 16px;
 }
 
 .nav-link:hover,
@@ -698,6 +705,37 @@ body {
     font-size: 0.9rem;
 }
 
+/* 플로팅 버튼 */
+.floating-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0, 123, 255, 0.3);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.floating-btn:hover {
+    background: var(--secondary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(0, 123, 255, 0.4);
+}
+
+.floating-btn:active {
+    transform: translateY(0);
+}
+
 /* 반응형 디자인 */
 @media (max-width: 768px) {
     .header-main {
@@ -804,6 +842,14 @@ body {
 
     .social-links {
         justify-content: center;
+    }
+
+    .floating-btn {
+        bottom: 20px;
+        right: 20px;
+        width: 56px;
+        height: 56px;
+        font-size: 20px;
     }
 }
 
