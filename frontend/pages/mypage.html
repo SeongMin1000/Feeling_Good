@@ -267,6 +267,167 @@
         </div>
     </div>
 
+    <!-- 프로필 편집 모달 -->
+    <div id="editProfileModal" class="modal" style="display: none;">
+        <div class="modal-content edit-profile-modal">
+            <div class="modal-header">
+                <h2><i class="fas fa-edit"></i> <span data-translate="프로필 수정">프로필 수정</span></h2>
+                <span class="close" onclick="closeEditModal()">&times;</span>
+            </div>
+            <form id="editProfileForm" class="edit-profile-form">
+                <!-- 기본 정보 섹션 -->
+                <div class="form-section">
+                    <h3><i class="fas fa-user"></i> <span data-translate="기본 정보">기본 정보</span></h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="editUsername" data-translate="이름/닉네임">이름/닉네임</label>
+                            <input type="text" id="editUsername" name="username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editAge" data-translate="나이">나이</label>
+                            <input type="number" id="editAge" name="age" min="18" max="100">
+                        </div>
+                        <div class="form-group">
+                            <label for="editGender" data-translate="성별">성별</label>
+                            <select id="editGender" name="gender">
+                                <option value="">선택하세요</option>
+                                <option value="남성" data-translate="남성">남성</option>
+                                <option value="여성" data-translate="여성">여성</option>
+                                <option value="기타" data-translate="기타">기타</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editPhone" data-translate="전화번호">전화번호</label>
+                            <input type="tel" id="editPhone" name="phone" placeholder="010-0000-0000">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 체류 정보 섹션 -->
+                <div class="form-section">
+                    <h3><i class="fas fa-passport"></i> <span data-translate="체류 정보">체류 정보</span></h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="editNationality" data-translate="국적">국적</label>
+                            <select id="editNationality" name="nationality">
+                                <option value="">선택하세요</option>
+                                <option value="베트남" data-translate="베트남">베트남</option>
+                                <option value="중국" data-translate="중국">중국</option>
+                                <option value="필리핀" data-translate="필리핀">필리핀</option>
+                                <option value="태국" data-translate="태국">태국</option>
+                                <option value="우즈베키스탄" data-translate="우즈베키스탄">우즈베키스탄</option>
+                                <option value="기타" data-translate="기타">기타</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editVisaType" data-translate="비자 종류">비자 종류</label>
+                            <select id="editVisaType" name="visaType">
+                                <option value="">선택하세요</option>
+                                <option value="E-9" data-translate="E-9 (비전문취업)">E-9 (비전문취업)</option>
+                                <option value="D-4" data-translate="D-4 (일반연수)">D-4 (일반연수)</option>
+                                <option value="F-2" data-translate="F-2 (거주)">F-2 (거주)</option>
+                                <option value="F-4" data-translate="F-4 (재외동포)">F-4 (재외동포)</option>
+                                <option value="F-6" data-translate="F-6 (결혼이민)">F-6 (결혼이민)</option>
+                                <option value="H-2" data-translate="H-2 (방문취업)">H-2 (방문취업)</option>
+                                <option value="기타" data-translate="기타">기타</option>
+                            </select>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="editVisaExpiry" data-translate="비자 만료일">비자 만료일</label>
+                            <input type="date" id="editVisaExpiry" name="visaExpiry">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 거주/근무 조건 섹션 -->
+                <div class="form-section">
+                    <h3><i class="fas fa-map-marker-alt"></i> <span data-translate="거주/근무 조건">거주/근무 조건</span></h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="editCurrentLocation" data-translate="현재 거주 지역">현재 거주 지역</label>
+                            <select id="editCurrentLocation" name="currentLocation">
+                                <option value="">선택하세요</option>
+                                <option value="서울" data-translate="서울">서울</option>
+                                <option value="경기" data-translate="경기">경기</option>
+                                <option value="인천" data-translate="인천">인천</option>
+                                <option value="부산" data-translate="부산">부산</option>
+                                <option value="대구" data-translate="대구">대구</option>
+                                <option value="광주" data-translate="광주">광주</option>
+                                <option value="대전" data-translate="대전">대전</option>
+                                <option value="울산" data-translate="울산">울산</option>
+                                <option value="기타" data-translate="기타">기타</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editWorkType" data-translate="희망 근무형태">희망 근무형태</label>
+                            <select id="editWorkType" name="workType">
+                                <option value="">선택하세요</option>
+                                <option value="풀타임" data-translate="풀타임">풀타임</option>
+                                <option value="파트타임" data-translate="파트타임">파트타임</option>
+                                <option value="교대근무" data-translate="교대근무">교대근무</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 언어/직무 정보 섹션 -->
+                <div class="form-section">
+                    <h3><i class="fas fa-language"></i> <span data-translate="언어 & 직무 정보">언어 & 직무 정보</span></h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="editPreferredLanguage" data-translate="선호 UI 언어">선호 UI 언어</label>
+                            <select id="editPreferredLanguage" name="preferredLanguage">
+                                <option value="">선택하세요</option>
+                                <option value="한국어" data-translate="한국어">한국어</option>
+                                <option value="영어" data-translate="영어">영어</option>
+                                <option value="베트남어" data-translate="베트남어">베트남어</option>
+                                <option value="중국어" data-translate="중국어">중국어</option>
+                                <option value="우즈베크어" data-translate="우즈베크어">우즈베크어</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editKoreanLevel" data-translate="한국어 능력">한국어 능력</label>
+                            <select id="editKoreanLevel" name="koreanLevel">
+                                <option value="">선택하세요</option>
+                                <option value="상" data-translate="상">상</option>
+                                <option value="중" data-translate="중">중</option>
+                                <option value="하" data-translate="하">하</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editDesiredIndustry" data-translate="희망 직종/산업군">희망 직종/산업군</label>
+                            <select id="editDesiredIndustry" name="desiredIndustry">
+                                <option value="">선택하세요</option>
+                                <option value="제조업" data-translate="제조업">제조업</option>
+                                <option value="건설업" data-translate="건설업">건설업</option>
+                                <option value="농축산업" data-translate="농축산업">농축산업</option>
+                                <option value="어업" data-translate="어업">어업</option>
+                                <option value="서비스업" data-translate="서비스업">서비스업</option>
+                                <option value="기타" data-translate="기타">기타</option>
+                            </select>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="editWorkExperience" data-translate="직무 경력">직무 경력</label>
+                            <textarea id="editWorkExperience" name="workExperience" rows="3"
+                                placeholder="직무 경력을 자세히 입력해주세요"
+                                data-translate-placeholder="직무 경력을 자세히 입력해주세요"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" onclick="closeEditModal()">
+                        <span data-translate="취소">취소</span>
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> <span data-translate="저장">저장</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/common.js"></script>
     <script src="../js/translate.js"></script>
     <script src="../js/mypage.js"></script>
     <script>

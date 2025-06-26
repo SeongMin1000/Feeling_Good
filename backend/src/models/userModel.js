@@ -182,14 +182,44 @@ class UserModel {
             }
 
             // 비자 정보 업데이트
-            if (userData.nationality || userData.visaType || userData.visaExpiry) {
+            if (userData.nationality || userData.visa_type || userData.visa_expiry_date) {
                 await connection.execute(`
                     UPDATE user_visa SET 
                         nationality = COALESCE(?, nationality),
                         visa_type = COALESCE(?, visa_type),
                         visa_expiry_date = COALESCE(?, visa_expiry_date)
                     WHERE user_id = ?
-                `, [userData.nationality, userData.visaType, userData.visaExpiry, userId]);
+                `, [userData.nationality, userData.visa_type, userData.visa_expiry_date, userId]);
+            }
+
+            // 선호도/근무 조건 업데이트
+            if (userData.current_location || userData.work_type) {
+                await connection.execute(`
+                    UPDATE user_preferences SET 
+                        current_location = COALESCE(?, current_location),
+                        work_type = COALESCE(?, work_type)
+                    WHERE user_id = ?
+                `, [userData.current_location, userData.work_type, userId]);
+            }
+
+            // 언어 정보 업데이트
+            if (userData.preferred_language || userData.korean_level) {
+                await connection.execute(`
+                    UPDATE user_languages SET 
+                        preferred_language = COALESCE(?, preferred_language),
+                        korean_level = COALESCE(?, korean_level)
+                    WHERE user_id = ?
+                `, [userData.preferred_language, userData.korean_level, userId]);
+            }
+
+            // 직무/경력 정보 업데이트
+            if (userData.desired_industry || userData.work_experience) {
+                await connection.execute(`
+                    UPDATE user_careers SET 
+                        desired_industry = COALESCE(?, desired_industry),
+                        work_experience = COALESCE(?, work_experience)
+                    WHERE user_id = ?
+                `, [userData.desired_industry, userData.work_experience, userId]);
             }
 
             await connection.commit();

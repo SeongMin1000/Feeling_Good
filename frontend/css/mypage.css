@@ -470,3 +470,112 @@ input:checked+.slider:before {
         font-size: 13px;
     }
 }
+
+/* 프로필 편집 모달 - 기존 디자인과 통일 */
+#editProfileModal.modal {
+    z-index: 9999;
+}
+
+#editProfileModal .modal-content {
+    max-width: 800px;
+    width: 90%;
+}
+
+/* 프로필 편집 모달 헤더는 기본 스타일 사용 */
+
+/* 편집 폼 - 기본 스타일과 통일 */
+.edit-profile-form {
+    padding: 2rem;
+}
+
+.form-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.form-section:last-of-type {
+    margin-bottom: 0;
+}
+
+.form-section h3 {
+    margin: 0 0 1.5rem 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+}
+
+.form-section h3 i {
+    color: var(--primary-color);
+    font-size: 1.1rem;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+/* 폼 입력 필드는 기본 스타일 사용 */
+.edit-profile-form .form-group input,
+.edit-profile-form .form-group select,
+.edit-profile-form .form-group textarea {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* 필수 필드 표시 */
+.form-group label[for="editUsername"]::after {
+    content: ' *';
+    color: #dc3545;
+    font-weight: bold;
+}
+
+/* 모달 액션 버튼은 기본 스타일 사용 */
+
+/* 프로필 편집 모달 전용 스타일 */
+
+/* 프로필 편집 모달 반응형 */
+@media (max-width: 768px) {
+    .edit-profile-form {
+        padding: 1.5rem;
+    }
+
+    .form-section {
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .edit-profile-form {
+        padding: 1rem;
+    }
+
+    .form-section {
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .form-section h3 {
+        font-size: 1rem;
+        margin-bottom: 1rem;
+    }
+}

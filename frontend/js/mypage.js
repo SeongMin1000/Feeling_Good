@@ -198,7 +198,151 @@ function removeFavorite(jobId) {
 
 // 프로필 편집 기능
 function editProfile() {
-  alert('프로필 편집 기능은 준비 중입니다.');
+  const modal = document.getElementById('editProfileModal');
+  modal.style.display = 'flex';
+
+  // 현재 프로필 정보로 폼 채우기
+  populateEditForm();
+
+  // 번역 적용
+  if (window.translator) {
+    window.translator.updateUILanguage();
+  }
+}
+
+// 편집 폼에 현재 데이터 채우기
+function populateEditForm() {
+  try {
+    const userData = JSON.parse(localStorage.getItem('user')) || {};
+
+    // 기본 정보
+    document.getElementById('editUsername').value = userData.username || '';
+    document.getElementById('editAge').value = userData.age || '';
+    document.getElementById('editGender').value = userData.gender || '';
+    document.getElementById('editPhone').value = userData.phone || '';
+
+    // 체류 정보
+    document.getElementById('editNationality').value = userData.nationality || '';
+    document.getElementById('editVisaType').value = userData.visa_type || userData.visaType || '';
+
+    // 비자 만료일 처리 (날짜 형식 변환)
+    const visaExpiry = userData.visa_expiry_date || userData.visaExpiry;
+    if (visaExpiry) {
+      const date = new Date(visaExpiry);
+      if (!isNaN(date.getTime())) {
+        document.getElementById('editVisaExpiry').value = date.toISOString().split('T')[0];
+      }
+    }
+
+    // 거주/근무 조건
+    document.getElementById('editCurrentLocation').value = userData.current_location || userData.currentLocation || '';
+    document.getElementById('editWorkType').value = userData.work_type || userData.workType || '';
+
+    // 언어/직무 정보
+    document.getElementById('editPreferredLanguage').value = userData.preferred_language || userData.preferredLanguage || '';
+    document.getElementById('editKoreanLevel').value = userData.korean_level || userData.koreanLevel || '';
+    document.getElementById('editDesiredIndustry').value = userData.desired_industry || userData.desiredIndustry || '';
+    document.getElementById('editWorkExperience').value = userData.work_experience || userData.workExperience || '';
+  } catch (error) {
+    console.error('프로필 데이터 로드 실패:', error);
+  }
+}
+
+// 편집 모달 닫기
+function closeEditModal() {
+  const modal = document.getElementById('editProfileModal');
+  modal.style.display = 'none';
+}
+
+// 프로필 업데이트 처리
+async function handleProfileUpdate(event) {
+  event.preventDefault();
+
+  const formData = new FormData(event.target);
+  const updatedProfile = {};
+
+  // 폼 데이터를 객체로 변환
+  for (let [key, value] of formData) {
+    updatedProfile[key] = value.trim();
+  }
+
+  // 데이터베이스 필드명으로 변환
+  const profileData = {
+    username: updatedProfile.username,
+    age: updatedProfile.age ? parseInt(updatedProfile.age) : null,
+    gender: updatedProfile.gender,
+    phone: updatedProfile.phone,
+    nationality: updatedProfile.nationality,
+    visa_type: updatedProfile.visaType,
+    visa_expiry_date: updatedProfile.visaExpiry || null,
+    current_location: updatedProfile.currentLocation,
+    work_type: updatedProfile.workType,
+    preferred_language: updatedProfile.preferredLanguage,
+    korean_level: updatedProfile.koreanLevel,
+    desired_industry: updatedProfile.desiredIndustry,
+    work_experience: updatedProfile.workExperience
+  };
+
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      showToast('로그인이 필요합니다.', 'error');
+      window.location.href = 'login.html';
+      return;
+    }
+
+    // 서버에 업데이트 요청
+    const response = await fetch('/api/user/profile', {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(profileData)
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+
+      // localStorage 업데이트
+      const currentUser = JSON.parse(localStorage.getItem('user')) || {};
+      const updatedUser = { ...currentUser, ...profileData };
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+
+      // UI 업데이트
+      loadUserProfile();
+
+      // 모달 닫기
+      closeEditModal();
+
+      // 성공 메시지
+      showToast('프로필이 성공적으로 업데이트되었습니다.', 'success');
+
+    } else if (response.status === 401) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      showToast('로그인이 만료되었습니다.', 'error');
+      window.location.href = 'login.html';
+    } else {
+      const errorData = await response.json();
+      showToast(errorData.message || '프로필 업데이트에 실패했습니다.', 'error');
+    }
+  } catch (error) {
+    console.error('프로필 업데이트 에러:', error);
+
+    // 네트워크 오류 시 localStorage만 업데이트
+    const currentUser = JSON.parse(localStorage.getItem('user')) || {};
+    const updatedUser = { ...currentUser, ...profileData };
+    localStorage.setItem('user', JSON.stringify(updatedUser));
+
+    // UI 업데이트
+    loadUserProfileFromStorage();
+
+    // 모달 닫기
+    closeEditModal();
+
+    showToast('프로필이 로컬에 저장되었습니다. (서버 연결 실패)', 'info');
+  }
 }
 
 // 로그아웃 기능
@@ -312,8 +456,27 @@ function goToCommunity() {
   window.location.href = 'community.html';
 }
 
+// 폼 이벤트 리스너 추가
+document.addEventListener('DOMContentLoaded', function () {
+  const editForm = document.getElementById('editProfileForm');
+  if (editForm) {
+    editForm.addEventListener('submit', handleProfileUpdate);
+  }
+
+  // 모달 외부 클릭 시 닫기
+  const modal = document.getElementById('editProfileModal');
+  if (modal) {
+    modal.addEventListener('click', function (e) {
+      if (e.target === modal) {
+        closeEditModal();
+      }
+    });
+  }
+});
+
 // 전역 함수로 노출
 window.switchTab = switchTab;
 window.removeFavorite = removeFavorite;
 window.editProfile = editProfile;
+window.closeEditModal = closeEditModal;
 window.logout = logout;
