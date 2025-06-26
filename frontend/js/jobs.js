@@ -521,13 +521,31 @@ function changePage(page) {
 
 // 관심 등록/해제
 function toggleLike(jobId) {
+  const job = window.jobData.find(j => j.id === jobId);
+  if (!job) return;
+
+  let favorites = JSON.parse(localStorage.getItem('jobFavorites')) || [];
+
   if (likedJobs.has(jobId)) {
+    // 관심 해제
     likedJobs.delete(jobId);
+    favorites = favorites.filter(fav => fav.id !== jobId);
   } else {
+    // 관심 등록
     likedJobs.add(jobId);
+    const favoriteJob = {
+      id: job.id,
+      title: job.title,
+      company: job.company,
+      location: job.location,
+      salary: job.salary,
+      workType: job.employment,
+      dateAdded: new Date().toISOString()
+    };
+    favorites.push(favoriteJob);
   }
 
-  localStorage.setItem('favoriteJobs', JSON.stringify([...likedJobs]));
+  localStorage.setItem('jobFavorites', JSON.stringify(favorites));
   renderJobs(); // 하트 아이콘 상태 업데이트
 }
 
@@ -670,9 +688,34 @@ function applyFilters() {
 
 // 저장된 데이터 불러오기
 function loadSavedJobs() {
-  const saved = localStorage.getItem('favoriteJobs');
-  if (saved) {
-    likedJobs = new Set(JSON.parse(saved));
+  // 기존 방식과 새로운 방식 모두 지원
+  const oldSaved = localStorage.getItem('favoriteJobs');
+  const newSaved = localStorage.getItem('jobFavorites');
+
+  if (newSaved) {
+    const favorites = JSON.parse(newSaved);
+    likedJobs = new Set(favorites.map(fav => fav.id));
+  } else if (oldSaved) {
+    // 기존 데이터를 새로운 형식으로 변환
+    const oldFavorites = JSON.parse(oldSaved);
+    likedJobs = new Set(oldFavorites);
+
+    // 새로운 형식으로 변환하여 저장
+    const newFavorites = oldFavorites.map(jobId => {
+      const job = window.jobData.find(j => j.id === jobId);
+      return job ? {
+        id: job.id,
+        title: job.title,
+        company: job.company,
+        location: job.location,
+        salary: job.salary,
+        workType: job.employment,
+        dateAdded: new Date().toISOString()
+      } : null;
+    }).filter(Boolean);
+
+    localStorage.setItem('jobFavorites', JSON.stringify(newFavorites));
+    localStorage.removeItem('favoriteJobs'); // 기존 데이터 제거
   }
 }
 
