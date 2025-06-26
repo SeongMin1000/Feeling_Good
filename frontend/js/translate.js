@@ -9,6 +9,11 @@ class Translator {
         this.currentLanguage = language;
         localStorage.setItem('preferredLanguage', language);
         this.updateUILanguage();
+
+        // 커뮤니티 페이지의 게시글 내용도 번역
+        if (typeof translatePostContent === 'function') {
+            translatePostContent();
+        }
     }
 
     // 단일 텍스트 번역
