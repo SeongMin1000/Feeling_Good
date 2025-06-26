@@ -74,7 +74,7 @@ CREATE TABLE posts (
   title VARCHAR(255) NOT NULL,                        -- 게시글 제목
   content LONGTEXT NOT NULL,                          -- 본문 (이미지 포함 가능)
   author_id INT NOT NULL,                             -- 작성자 ID (users.id 참조)
-  category_id INT,                                    -- 카테고리 ID (categories.id 참조)
+
   like_count INT DEFAULT 0,                           -- 좋아요 수
   comment_count INT DEFAULT 0,                        -- 댓글 수 (캐싱용)
   views INT DEFAULT 0,                                -- 조회수
@@ -83,7 +83,6 @@ CREATE TABLE posts (
               ON UPDATE CURRENT_TIMESTAMP,
 
   FOREIGN KEY (author_id) REFERENCES users(id),
-  FOREIGN KEY (category_id) REFERENCES categories(id)
 );
 
 -- 8. 댓글 정보
