@@ -6,6 +6,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
   const isAuthenticated = await CommonUtils.checkAuthStatus();
   if (isAuthenticated) {
+    await fetchJobs();
     initializeJobsPage();
   }
 });
@@ -260,7 +261,9 @@ function renderJobs() {
 function createJobCard(job) {
   const isLiked = likedJobs.has(job.id);
   const salaryText = job.salary === '5000+' ? '5,000만원 이상' : `${job.salary.replace('-', '~')}만원`;
-  const visaText = job.visa.join(', ');
+  const visaText = Array.isArray(job.visa)
+    ? job.visa.join(', ')
+    : (typeof job.visa === 'string' && job.visa.length > 0 ? job.visa : '');
 
   const daysLeft = Math.ceil((new Date(job.deadline) - new Date()) / (1000 * 60 * 60 * 24));
   const deadlineClass = daysLeft <= 7 ? 'urgent' : '';
@@ -273,7 +276,6 @@ function createJobCard(job) {
           <div class="company-name" data-translate="${job.company}">${job.company}</div>
           <span class="job-category" data-translate="${getCategoryName(job.category)}">${getCategoryName(job.category)}</span>
         </div>
-        <img src="${job.logo}" alt="${job.company} 로고" class="company-logo">
       </div>
       
       <div class="job-details">
@@ -479,35 +481,44 @@ function closeAddJobModal() {
 document.addEventListener('DOMContentLoaded', function () {
   const addJobForm = document.getElementById('addJobForm');
   if (addJobForm) {
-    addJobForm.addEventListener('submit', function (e) {
+    addJobForm.addEventListener('submit', async function (e) {
       e.preventDefault();
 
       const formData = new FormData(this);
       const jobData = Object.fromEntries(formData);
 
-      // 새로운 ID 생성
-      jobData.id = Date.now();
-      jobData.visa = jobData.visa ? [jobData.visa] : [];
-      jobData.posted = new Date().toISOString().split('T')[0];
-      jobData.views = 0;
-
-      // 기본 로고 설정
-      if (!jobData.logo) {
-        jobData.logo = `https://via.placeholder.com/60x60.png?text=${jobData.company.charAt(0).toUpperCase()}`;
+      // 비자(visa) 체크박스 값 여러 개 배열로 수집
+      const visaChecked = Array.from(document.querySelectorAll('input[name="visa"]:checked')).map(cb => cb.value);
+      jobData.visa = visaChecked;
+      if (!jobData.visa || jobData.visa.length === 0) {
+        alert('비자 종류를 1개 이상 선택해주세요.');
+        return;
       }
 
-      // 샘플 데이터에 추가 (실제 구현에서는 API 호출)
-      window.jobData.push(jobData);
-      filteredJobs = [...window.jobData];
+      // employment 값 매핑
+      const employmentMap = {
+        '정규직': 'full-time',
+        '계약직': 'contract',
+        '인턴': 'intern',
+        '파견직': 'part-time'
+      };
+      if (jobData.employment && employmentMap[jobData.employment]) {
+        jobData.employment = employmentMap[jobData.employment];
+      }
 
-      // UI 업데이트
-      renderJobs();
-      setupPagination();
-
-      // 모달 닫기
-      closeAddJobModal();
-
-      alert('채용공고가 성공적으로 등록되었습니다!');
+      // DB에 저장 (POST)
+      const res = await fetch('/api/jobs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(jobData)
+      });
+      if (res.ok) {
+        alert('채용공고가 성공적으로 등록되었습니다!');
+        closeAddJobModal();
+        await fetchJobs(); // 목록 새로고침
+      } else {
+        alert('채용공고 등록에 실패했습니다.');
+      }
     });
   }
 });
@@ -524,8 +535,15 @@ function applyFilters() {
 
   // 고용형태 필터
   const employmentFilters = Array.from(document.querySelectorAll('input[name="employment"]:checked')).map(cb => cb.value);
+  const employmentMap = {
+    '정규직': 'full-time',
+    '계약직': 'contract',
+    '인턴': 'intern',
+    '파견직': 'part-time'
+  };
   if (employmentFilters.length > 0) {
-    filtered = filtered.filter(job => employmentFilters.includes(job.employment));
+    const mappedEmployment = employmentFilters.map(val => employmentMap[val] || val);
+    filtered = filtered.filter(job => mappedEmployment.includes(job.employment));
   }
 
   // 급여 필터
@@ -534,10 +552,18 @@ function applyFilters() {
     filtered = filtered.filter(job => salaryFilters.includes(job.salary));
   }
 
-  // 비자 필터
+  // 비자 필터 (하나라도 포함되면 통과)
   const visaFilters = Array.from(document.querySelectorAll('input[name="visa"]:checked')).map(cb => cb.value);
   if (visaFilters.length > 0) {
-    filtered = filtered.filter(job => job.visa.some(v => visaFilters.includes(v)));
+    filtered = filtered.filter(job => {
+      let visaArr = [];
+      if (Array.isArray(job.visa)) {
+        visaArr = job.visa;
+      } else if (typeof job.visa === 'string') {
+        visaArr = job.visa.split(',').map(v => v.trim());
+      }
+      return visaArr.some(v => visaFilters.includes(v));
+    });
   }
 
   // 언어 수준 필터
@@ -545,7 +571,6 @@ function applyFilters() {
   const englishLevel = document.querySelector('select[name="english-level"]').value;
 
   if (koreanLevel) {
-    // 언어 수준 비교 로직 (간단화)
     filtered = filtered.filter(job => job.korean === koreanLevel || job.korean === 'basic');
   }
 
@@ -560,14 +585,11 @@ function applyFilters() {
 
   // 고급 필터 패널 닫기
   const advancedFilters = document.querySelector('.advanced-filters');
-
   if (advancedFilters) {
     advancedFilters.classList.remove('show');
-    CommonUtils.removeAdvancedFiltersOutsideClick(); // 외부 클릭 이벤트 제거
+    CommonUtils.removeAdvancedFiltersOutsideClick();
   }
-
-  // 메인 콘텐츠 위치 헤더 높이에 맞춰 조정
-  CommonUtils.adjustMainContentPosition(true); // 동적 조정 (transition 사용)
+  CommonUtils.adjustMainContentPosition(true);
 }
 
 // 저장된 데이터 불러오기
@@ -604,4 +626,13 @@ function loadSavedJobs() {
 // 로그아웃
 function logout() {
   CommonUtils.logout();
+}
+
+async function fetchJobs() {
+  const res = await fetch('/api/jobs');
+  const jobs = await res.json();
+  window.jobData = jobs;
+  filteredJobs = [...window.jobData];
+  renderJobs();
+  setupPagination();
 }

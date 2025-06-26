@@ -12,6 +12,7 @@ const { errorHandler, notFoundHandler } = require('./middleware/errorHandler');
 const userRoutes = require('./routes/userRoutes');
 const translateRoutes = require('./routes/translateRoutes');
 const postsRoutes = require('./routes/posts');
+const jobsRouter = require('./routes/jobs');
 
 // 기본 포트 설정
 const PORT = process.env.PORT;
@@ -50,6 +51,7 @@ if (process.env.NODE_ENV === 'development') {
 app.use('/api/user', userRoutes);
 app.use('/api/translate', translateRoutes);
 app.use('/api/posts', postsRoutes);
+app.use('/api/jobs', jobsRouter);
 
 // Health check 엔드포인트
 app.get('/health', (req, res) => {

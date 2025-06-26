@@ -203,18 +203,17 @@
         <span class="close" onclick="closeAddJobModal()">&times;</span>
       </div>
       <form id="addJobForm" class="modal-form">
-        <div class="form-row">
-          <div class="form-group">
+        <div class="form-row" style="display: flex; gap: 4%;">
+          <div class="form-group" style="width: 48%;">
             <label for="jobTitle">직무명 *</label>
             <input type="text" id="jobTitle" name="title" required placeholder="예: 프론트엔드 개발자"
-              data-translate-placeholder="예: 프론트엔드 개발자">
+              data-translate-placeholder="예: 프론트엔드 개발자" style="width: 100%;">
           </div>
-          <div class="form-group">
+          <div class="form-group" style="width: 48%;">
             <label for="companyName">회사명 *</label>
-            <input type="text" id="companyName" name="company" required>
+            <input type="text" id="companyName" name="company" required style="width: 100%;">
           </div>
         </div>
-
         <div class="form-row">
           <div class="form-group">
             <label for="jobLocation">지역 *</label>
@@ -244,7 +243,6 @@
             </select>
           </div>
         </div>
-
         <div class="form-row">
           <div class="form-group">
             <label for="employment">고용형태 *</label>
@@ -267,25 +265,30 @@
             </select>
           </div>
         </div>
-
         <div class="form-row">
           <div class="form-group">
             <label for="deadline">지원 마감일 *</label>
             <input type="date" id="deadline" name="deadline" required>
           </div>
-          <div class="form-group">
-            <label for="logoUrl">로고 URL</label>
-            <input type="url" id="logoUrl" name="logo" placeholder="https://example.com/logo.png"
-              data-translate-placeholder="https://example.com/logo.png">
+        </div>
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label>비자 종류 *</label>
+            <div id="visaCheckboxGroup">
+              <label><input type="checkbox" name="visa" value="E-7" required> E-7 (특정활동)</label>
+              <label><input type="checkbox" name="visa" value="E-9"> E-9 (비전문취업)</label>
+              <label><input type="checkbox" name="visa" value="E-2"> E-2 (회화지도)</label>
+              <label><input type="checkbox" name="visa" value="F-2"> F-2 (거주)</label>
+              <label><input type="checkbox" name="visa" value="F-4"> F-4 (재외동포)</label>
+              <label><input type="checkbox" name="visa" value="F-6"> F-6 (결혼이민)</label>
+            </div>
           </div>
         </div>
-
         <div class="form-group full-width">
           <label for="jobDescription">상세 설명 *</label>
           <textarea id="jobDescription" name="description" rows="5" required
             placeholder="채용공고에 대한 상세 설명을 입력하세요..."></textarea>
         </div>
-
         <div class="modal-actions">
           <button type="button" class="btn btn-outline" onclick="closeAddJobModal()">취소</button>
           <button type="submit" class="btn btn-primary">

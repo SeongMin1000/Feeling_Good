@@ -96,3 +96,25 @@ CREATE TABLE comments (
     FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
     FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE
 );
+-- 채용 공고 테이블
+CREATE TABLE jobs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,                   
+    company VARCHAR(255) NOT NULL,                 
+    author_id INT NOT NULL,                        
+    location VARCHAR(100),                         
+    category VARCHAR(50),                          
+    employment ENUM('full-time', 'part-time', 'contract', 'intern') DEFAULT 'full-time',
+    salary VARCHAR(50),                            
+    deadline DATE,                                 
+    posted DATETIME DEFAULT CURRENT_TIMESTAMP,     
+    views INT DEFAULT 0,                           
+    description TEXT,                              
+                                
+
+    korean_level ENUM('none', 'basic', 'intermediate', 'fluent'),
+    english_level ENUM('none', 'basic', 'intermediate', 'fluent'),
+    visa VARCHAR(255),
+
+    FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE
+);

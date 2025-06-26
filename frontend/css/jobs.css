@@ -9,11 +9,12 @@
 
 .jobs-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   padding: 1.5rem 2rem;
   border-bottom: 1px solid var(--border-color);
   background-color: #f8f9fa;
+  gap: 1.2rem;
 }
 
 .jobs-count {
@@ -261,4 +262,29 @@
   .modal-form {
     padding: 1rem;
   }
+}
+
+.btn-recommend {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #f7b500;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.45rem 1.1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-left: 1.2rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(247,181,0,0.08);
+}
+.btn-recommend i {
+  font-size: 1.1rem;
+}
+.btn-recommend:hover {
+  background: #e6a800;
+  color: #fff;
 }
