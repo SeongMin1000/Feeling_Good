@@ -1,4 +1,6 @@
-// ✅ 1. 로그인 상태 확인 및 토큰 검증
+// 채용정보 페이지 JavaScript - 커뮤니티 스타일로 통일
+
+// 로그인 상태 확인 및 토큰 검증
 async function checkAuthStatus() {
   const token = localStorage.getItem("token");
 
@@ -8,7 +10,6 @@ async function checkAuthStatus() {
     return false;
   }
 
-  // 토큰 유효성 간단 체크 (실제 API 호출로 검증)
   try {
     const response = await fetch('/api/user/profile', {
       method: 'GET',
@@ -29,7 +30,7 @@ async function checkAuthStatus() {
     return true;
   } catch (error) {
     console.error('Auth check error:', error);
-    return true; // 네트워크 오류 시에는 계속 진행
+    return true;
   }
 }
 
@@ -41,240 +42,414 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 });
 
-// 구인 정보 페이지 초기화
-function initializeJobsPage() {
-  loadSavedJobs(); // 저장된 기업 데이터 불러오기
-  renderCards();
-  renderFavorites();
-  updateUI(); // 초기 UI 설정
+// 페이지 로드 시 즉시 위치 조정 (DOM 준비 전에도 실행)
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    // DOM이 준비되면 즉시 위치 조정
+    setTimeout(() => {
+      adjustMainContentPosition(false);
+    }, 10);
+  });
+} else {
+  // 이미 DOM이 준비된 경우 즉시 실행
+  adjustMainContentPosition(false);
 }
 
-const jobData = [
+// 구인 정보 페이지 초기화
+function initializeJobsPage() {
+  loadSavedJobs();
+  setupFilterEvents();
+  setupSearchEvents();
+  renderJobs();
+  setupPagination();
+  setupResizeHandler();
+  adjustMainContentPosition(false); // 초기 위치 조정 (transition 없음)
+}
+
+// 메인 콘텐츠 위치를 헤더 높이에 맞춰 조정하는 함수
+function adjustMainContentPosition(enableTransition = false) {
+  const header = document.querySelector('.header');
+  const filterSection = document.querySelector('.filter-section');
+  const mainContent = document.querySelector('.main-content');
+
+  if (header && filterSection && mainContent) {
+    if (enableTransition) {
+      // 동적 조정 시에는 애니메이션과 함께
+      setTimeout(() => {
+        mainContent.classList.add('positioned');
+
+        // 실제 헤더 높이 계산
+        const headerHeight = header.offsetHeight;
+
+        // 필터 섹션을 헤더 바로 아래에 위치시키기
+        filterSection.style.marginTop = `${headerHeight}px`;
+
+        // 전체 섹션 높이 계산
+        const totalHeight = headerHeight + filterSection.offsetHeight;
+        mainContent.style.marginTop = `${totalHeight + 20}px`;
+      }, 50);
+    } else {
+      // 초기 로드 시에는 즉시 설정
+      const headerHeight = header.offsetHeight;
+
+      // 필터 섹션을 헤더 바로 아래에 위치시키기
+      filterSection.style.marginTop = `${headerHeight}px`;
+
+      // 전체 섹션 높이 계산
+      const totalHeight = headerHeight + filterSection.offsetHeight;
+      mainContent.style.marginTop = `${totalHeight + 20}px`;
+    }
+  }
+}
+
+// 화면 크기 변경 시 메인 콘텐츠 위치 조정
+function setupResizeHandler() {
+  window.addEventListener('resize', function () {
+    adjustMainContentPosition(true); // 리사이즈 시에는 transition 사용
+  });
+}
+
+// 샘플 채용공고 데이터
+window.jobData = [
   {
-    name: "KGlobal Inc.",
+    id: 1,
+    title: "프론트엔드 개발자",
+    company: "KGlobal Inc.",
     location: "서울",
-    job: "마케팅 인턴",
-    category: "서비스",
-    visa: "지원 가능",
-    rating: 4,
-    logo: "https://via.placeholder.com/100x100.png?text=KGlobal"
+    category: "it",
+    employment: "정규직",
+    salary: "3000-4000",
+    visa: ["E-7", "F-2"],
+    korean: "intermediate",
+    english: "basic",
+    description: "React, Vue.js를 활용한 웹 애플리케이션 개발 업무를 담당합니다. 신입/경력 모두 환영하며, 성장할 수 있는 환경을 제공합니다.",
+    deadline: "2024-02-15",
+    posted: "2024-01-15",
+    views: 156,
+    logo: "https://via.placeholder.com/60x60.png?text=KG"
   },
   {
-    name: "Ocean Korea",
+    id: 2,
+    title: "영어 강사",
+    company: "Ocean Korea",
     location: "부산",
-    job: "유통관리",
-    category: "무역사무",
-    visa: "지원 불가능",
-    rating: 3,
-    logo: "https://via.placeholder.com/100x100.png?text=Ocean"
+    category: "education",
+    employment: "계약직",
+    salary: "2000-3000",
+    visa: ["E-2"],
+    korean: "basic",
+    english: "native",
+    description: "초/중/고등학생 영어 회화 및 문법 수업을 담당합니다. 원어민 우대하며, 교육 경험이 있으신 분을 찾습니다.",
+    deadline: "2024-02-20",
+    posted: "2024-01-10",
+    views: 89,
+    logo: "https://via.placeholder.com/60x60.png?text=OK"
   },
   {
-    name: "Hansung Tech",
+    id: 3,
+    title: "무역사무원",
+    company: "Hansung Tech",
     location: "인천",
-    job: "엔지니어",
-    category: "IT개발",
-    visa: "지원 가능",
-    rating: 5,
-    logo: "https://via.placeholder.com/100x100.png?text=Hansung"
+    category: "trade",
+    employment: "정규직",
+    salary: "4000-5000",
+    visa: ["E-7", "F-4", "F-6"],
+    korean: "advanced",
+    english: "intermediate",
+    description: "수출입 업무, 해외 바이어 관리, 무역서류 작성 등의 업무를 담당합니다. 무역 실무 경험자 우대합니다.",
+    deadline: "2024-02-25",
+    posted: "2024-01-12",
+    views: 234,
+    logo: "https://via.placeholder.com/60x60.png?text=HT"
+  },
+  {
+    id: 4,
+    title: "서비스 매니저",
+    company: "Seoul Service Co.",
+    location: "서울",
+    category: "service",
+    employment: "정규직",
+    salary: "3000-4000",
+    visa: ["E-7", "F-2", "F-4"],
+    korean: "advanced",
+    english: "basic",
+    description: "고객 서비스 관리 및 직원 교육을 담당합니다. 서비스업 경험이 있으신 분을 우대합니다.",
+    deadline: "2024-02-28",
+    posted: "2024-01-18",
+    views: 112,
+    logo: "https://via.placeholder.com/60x60.png?text=SS"
+  },
+  {
+    id: 5,
+    title: "제조업 품질관리",
+    company: "Korea Manufacturing",
+    location: "경기",
+    category: "manufacture",
+    employment: "정규직",
+    salary: "2000-3000",
+    visa: ["E-9", "F-4"],
+    korean: "intermediate",
+    english: "basic",
+    description: "제품 품질 검사 및 관리 업무를 담당합니다. 제조업 경험자 우대하며, 꼼꼼한 성격의 지원자를 찾습니다.",
+    deadline: "2024-03-05",
+    posted: "2024-01-20",
+    views: 78,
+    logo: "https://via.placeholder.com/60x60.png?text=KM"
+  },
+  {
+    id: 6,
+    title: "그래픽 디자이너",
+    company: "Creative Studio",
+    location: "서울",
+    category: "design",
+    employment: "계약직",
+    salary: "3000-4000",
+    visa: ["E-7", "F-2"],
+    korean: "intermediate",
+    english: "intermediate",
+    description: "브랜드 디자인, 광고 제작물 디자인 업무를 담당합니다. Photoshop, Illustrator 능숙자 우대합니다.",
+    deadline: "2024-03-10",
+    posted: "2024-01-22",
+    views: 145,
+    logo: "https://via.placeholder.com/60x60.png?text=CS"
   }
 ];
 
-// 카테고리 필터링 관련 변수
-let currentCategory = 'all';
-let filteredJobData = [...jobData];
+// 전역 변수
+let filteredJobs = [...window.jobData];
+let currentPage = 1;
+let jobsPerPage = 5;
+let currentFilter = 'all';
+let likedJobs = new Set(JSON.parse(localStorage.getItem('favoriteJobs')) || []);
 
-const container = document.getElementById('cardContainer');
-const favoriteList = document.getElementById('favoriteList');
-let likedCompanies = new Set(JSON.parse(localStorage.getItem('favorites')) || []);
-let current = 0;
+// 필터 이벤트 설정
+function setupFilterEvents() {
+  // 카테고리 필터 버튼
+  const filterButtons = document.querySelectorAll('.filter-button');
+  filterButtons.forEach(button => {
+    button.addEventListener('click', function () {
+      // 활성 상태 변경
+      filterButtons.forEach(btn => btn.classList.remove('active'));
+      this.classList.add('active');
 
-// ✅ 2. 카드 렌더링
-function renderCards() {
-  if (!container) return;
+      // 필터 적용
+      const category = this.getAttribute('data-filter');
+      filterJobs(category);
+    });
+  });
 
-  container.innerHTML = '';
-  filteredJobData.forEach((job, index) => {
-    const card = document.createElement('div');
-    card.className = 'card';
-    if (index === 0) card.classList.add('active');
+  // 고급 필터 토글
+  const advancedToggle = document.querySelector('.advanced-filter-toggle');
+  const advancedFilters = document.querySelector('.advanced-filters');
+  const mainContent = document.querySelector('.main-content');
 
-    // 카드 내용 구성
-    const cardContent = `
-      <div class="card-header">
-        <img src="${job.logo}" alt="${job.name} Logo" class="company-logo">
-        <div class="company-info">
-        <h2>${job.name}</h2>
-          <p class="job-title">${job.job}</p>
-          <span class="category-tag">${job.category}</span>
+  if (advancedToggle && advancedFilters && mainContent) {
+    advancedToggle.addEventListener('click', function () {
+      advancedFilters.classList.toggle('show');
+
+      // 헤더 전체 높이를 계산하여 메인 콘텐츠 위치 조정
+      adjustMainContentPosition(true); // 동적 조정 (transition 사용)
+    });
+  }
+
+  // 정렬 옵션
+  const sortSelect = document.getElementById('sortType');
+  if (sortSelect) {
+    sortSelect.addEventListener('change', function () {
+      sortJobs(this.value);
+    });
+  }
+}
+
+// 검색 이벤트 설정
+function setupSearchEvents() {
+  const searchInput = document.getElementById('searchInput');
+  const searchBtn = document.querySelector('.search-btn');
+
+  if (searchInput) {
+    searchInput.addEventListener('keypress', handleSearchEnter);
+  }
+
+  if (searchBtn) {
+    searchBtn.addEventListener('click', searchJobs);
+  }
+}
+
+// 검색 엔터 처리
+function handleSearchEnter(event) {
+  if (event.key === 'Enter') {
+    searchJobs();
+  }
+}
+
+// 검색 기능
+function searchJobs() {
+  const searchType = document.getElementById('searchType').value;
+  const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+
+  if (!searchTerm) {
+    filteredJobs = [...window.jobData];
+  } else {
+    filteredJobs = window.jobData.filter(job => {
+      switch (searchType) {
+        case 'title':
+          return job.title.toLowerCase().includes(searchTerm);
+        case 'company':
+          return job.company.toLowerCase().includes(searchTerm);
+        case 'location':
+          return job.location.toLowerCase().includes(searchTerm);
+        case 'all':
+          return job.title.toLowerCase().includes(searchTerm) ||
+            job.company.toLowerCase().includes(searchTerm) ||
+            job.location.toLowerCase().includes(searchTerm) ||
+            job.description.toLowerCase().includes(searchTerm);
+        default:
+          return true;
+      }
+    });
+  }
+
+  currentPage = 1;
+  renderJobs();
+  setupPagination();
+}
+
+// 필터 기능
+function filterJobs(category) {
+  currentFilter = category;
+
+  if (category === 'all') {
+    filteredJobs = [...window.jobData];
+  } else {
+    filteredJobs = window.jobData.filter(job => job.category === category);
+  }
+
+  currentPage = 1;
+  renderJobs();
+  setupPagination();
+}
+
+// 정렬 기능
+function sortJobs(sortType) {
+  switch (sortType) {
+    case 'latest':
+      filteredJobs.sort((a, b) => new Date(b.posted) - new Date(a.posted));
+      break;
+    case 'deadline':
+      filteredJobs.sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
+      break;
+    case 'salary':
+      filteredJobs.sort((a, b) => {
+        const getSalaryValue = (salary) => {
+          if (salary === '5000+') return 5000;
+          return parseInt(salary.split('-')[0]);
+        };
+        return getSalaryValue(b.salary) - getSalaryValue(a.salary);
+      });
+      break;
+  }
+
+  renderJobs();
+}
+
+// 채용공고 목록 렌더링
+function renderJobs() {
+  const jobsList = document.getElementById('jobsList');
+  const jobsCount = document.getElementById('jobsCount');
+
+  if (!jobsList) return;
+
+  // 페이지네이션 적용
+  const startIndex = (currentPage - 1) * jobsPerPage;
+  const endIndex = startIndex + jobsPerPage;
+  const jobsToShow = filteredJobs.slice(startIndex, endIndex);
+
+  if (jobsToShow.length === 0) {
+    jobsList.innerHTML = `
+      <div class="empty-state">
+        <i class="fas fa-briefcase"></i>
+        <h3>검색 결과가 없습니다</h3>
+        <p>다른 검색어나 필터를 시도해보세요.</p>
+      </div>
+    `;
+  } else {
+    jobsList.innerHTML = jobsToShow.map(job => createJobCard(job)).join('');
+  }
+
+  // 총 개수 업데이트
+  if (jobsCount) {
+    jobsCount.textContent = filteredJobs.length;
+  }
+}
+
+// 채용공고 카드 생성
+function createJobCard(job) {
+  const isLiked = likedJobs.has(job.id);
+  const salaryText = job.salary === '5000+' ? '5,000만원 이상' : `${job.salary.replace('-', '~')}만원`;
+  const visaText = job.visa.join(', ');
+
+  const daysLeft = Math.ceil((new Date(job.deadline) - new Date()) / (1000 * 60 * 60 * 24));
+  const deadlineClass = daysLeft <= 7 ? 'urgent' : '';
+
+  return `
+    <div class="job-item" data-job-id="${job.id}">
+      <div class="job-header">
+        <div class="job-info">
+          <div class="job-title">${job.title}</div>
+          <div class="company-name">${job.company}</div>
+          <span class="job-category">${getCategoryName(job.category)}</span>
         </div>
+        <img src="${job.logo}" alt="${job.company} 로고" class="company-logo">
       </div>
       
       <div class="job-details">
         <div class="detail-item">
           <i class="fas fa-map-marker-alt"></i>
-          <span><span data-translate="지역">지역</span>: ${job.location}</span>
+          <span>${job.location}</span>
+        </div>
+        <div class="detail-item">
+          <i class="fas fa-briefcase"></i>
+          <span>${job.employment}</span>
+        </div>
+        <div class="detail-item">
+          <i class="fas fa-won-sign"></i>
+          <span>${salaryText}</span>
         </div>
         <div class="detail-item">
           <i class="fas fa-passport"></i>
-          <span><span data-translate="비자 지원">비자 지원</span>: <span data-translate="${job.visa}">${job.visa}</span></span>
+          <span>${visaText}</span>
         </div>
-        ${job.description ? `
-          <div class="job-description">
-            <i class="fas fa-info-circle"></i>
-            ${job.description}
-          </div>
-        ` : ''}
       </div>
       
-      <div class="card-actions">
-        <div class="rating">${'⭐'.repeat(job.rating)}${'☆'.repeat(5 - job.rating)}</div>
-        <div class="action-buttons">
-          <button class="action-button like-button" onclick="likeCard('${job.name}')">
-            <i class="fas fa-heart"></i> <span data-translate="관심 등록">관심 등록</span>
+      <div class="job-description">
+        ${job.description}
+      </div>
+      
+      <div class="job-meta">
+        <div class="job-date">
+          <i class="fas fa-calendar"></i>
+          <span>마감: ${job.deadline} (${daysLeft}일 남음)</span>
+        </div>
+        <div class="job-actions">
+          <button class="action-btn ${isLiked ? 'active' : ''}" onclick="toggleLike(${job.id})">
+            <i class="fas fa-heart"></i>
           </button>
-          <button class="action-button apply-button" onclick="applyToJob('${job.name}')">
-            <i class="fas fa-paper-plane"></i> <span data-translate="지원하기">지원하기</span>
+          <button class="action-btn" onclick="viewJobDetail(${job.id})">
+            <i class="fas fa-eye"></i>
+          </button>
+          <button class="action-btn" onclick="applyToJob(${job.id})">
+            <i class="fas fa-paper-plane"></i>
           </button>
         </div>
       </div>
-    `;
-
-    card.innerHTML = cardContent;
-    container.appendChild(card);
-  });
-
-  // 동적 콘텐츠 번역 적용
-  if (typeof translateDynamicContent === 'function') {
-    translateDynamicContent();
-  }
+    </div>
+  `;
 }
 
-// ✅ 3. 관심 등록 렌더링
-function renderFavorites() {
-  if (!favoriteList) return;
-
-  favoriteList.innerHTML = '';
-  likedCompanies.forEach(company => {
-    const li = document.createElement('li');
-    li.innerHTML = `
-      <div class="favorite-item-info">
-        <div class="favorite-company">${company}</div>
-      </div>
-      <button class="remove-btn" onclick="removeFavorite('${company}')">
-        <span data-translate="삭제">삭제</span>
-      </button>
-    `;
-    favoriteList.appendChild(li);
-  });
-
-  // 관심 등록 개수 업데이트
-  const favoriteCount = document.getElementById('favoriteCount');
-  if (favoriteCount) {
-    favoriteCount.textContent = likedCompanies.size;
-  }
-
-  localStorage.setItem('favorites', JSON.stringify([...likedCompanies]));
-
-  // 동적 콘텐츠 번역 적용
-  if (typeof translateDynamicContent === 'function') {
-    translateDynamicContent();
-  }
-}
-
-function likeCard(companyName) {
-  if (!likedCompanies.has(companyName)) {
-    likedCompanies.add(companyName);
-    renderFavorites();
-  } else {
-    alert(companyName + " 은(는) 이미 관심 목록에 등록되어 있습니다.");
-  }
-}
-
-function removeFavorite(companyName) {
-  likedCompanies.delete(companyName);
-  renderFavorites();
-}
-
-// ✅ 지원하기 기능 (임시)
-function applyToJob(companyName) {
-  alert(`${companyName}에 지원서를 제출했습니다!\n\n추후 지원서 관리 기능이 추가될 예정입니다.`);
-}
-
-// ✅ 카테고리 필터링 기능
-function filterByCategory(category) {
-  currentCategory = category;
-
-  // 필터 버튼 상태 업데이트
-  document.querySelectorAll('.filter-button').forEach(btn => {
-    btn.classList.remove('active');
-  });
-
-  // 클릭된 버튼에 active 클래스 추가
-  const clickedBtn = document.querySelector(`[data-filter="${getCategoryKey(category)}"]`);
-  if (clickedBtn) {
-    clickedBtn.classList.add('active');
-  }
-
-  // 데이터 필터링
-  if (category === 'all') {
-    filteredJobData = [...jobData];
-  } else {
-    filteredJobData = jobData.filter(job => job.category === category);
-  }
-
-  // 현재 인덱스 초기화
-  current = 0;
-
-  // 카드 다시 렌더링
-  renderCards();
-  updateUI();
-
-  // 필터 결과 알림
-  const resultCount = filteredJobData.length;
-  if (category === 'all') {
-    console.log(`전체 ${resultCount}개 기업을 표시합니다.`);
-  } else {
-    console.log(`${category} 카테고리 ${resultCount}개 기업을 표시합니다.`);
-  }
-}
-
-// 카테고리명을 필터 키로 변환하는 함수
-function getCategoryKey(category) {
-  const categoryMap = {
-    'all': 'all',
-    'IT개발': 'it',
-    '교육': 'education',
-    '무역사무': 'trade',
-    '서비스': 'service',
-    '제조업': 'manufacture',
-    '기타': 'other'
-  };
-  return categoryMap[category] || 'other';
-}
-
-// 기존 필터 버튼들에 이벤트 리스너 추가
-document.addEventListener('DOMContentLoaded', function () {
-  // 필터 버튼 이벤트 리스너
-  const filterButtons = document.querySelectorAll('.filter-button');
-  filterButtons.forEach(button => {
-    button.addEventListener('click', function () {
-      const filterType = this.getAttribute('data-filter');
-      const categoryName = getCategoryName(filterType);
-      filterByCategory(categoryName);
-    });
-  });
-
-  // 전체 버튼 기본 활성화
-  const allButton = document.querySelector('[data-filter="all"]');
-  if (allButton) {
-    allButton.classList.add('active');
-  }
-});
-
-// 필터 키를 카테고리명으로 변환하는 함수
-function getCategoryName(filterKey) {
-  const keyMap = {
-    'all': 'all',
+// 카테고리 이름 변환
+function getCategoryName(category) {
+  const categoryNames = {
+    'all': '전체',
     'it': 'IT개발',
     'education': '교육',
     'trade': '무역사무',
@@ -282,282 +457,230 @@ function getCategoryName(filterKey) {
     'manufacture': '제조업',
     'design': '기타'
   };
-  return keyMap[filterKey] || 'all';
+  return categoryNames[category] || category;
 }
 
-// ✅ 4. 카드 넘기기
-function nextCard() {
-  const cards = document.querySelectorAll('.card');
-  if (cards.length === 0) return;
+// 페이지네이션 설정
+function setupPagination() {
+  const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
+  const pagination = document.getElementById('pagination');
 
-  cards[current].classList.remove('active');
-  current = (current + 1) % cards.length;
-  cards[current].classList.add('active');
-  updateUI(); // UI 업데이트
-}
+  if (!pagination) return;
 
-function prevCard() {
-  const cards = document.querySelectorAll('.card');
-  if (cards.length === 0) return;
+  let paginationHTML = '';
 
-  cards[current].classList.remove('active');
-  current = (current - 1 + cards.length) % cards.length;
-  cards[current].classList.add('active');
-  updateUI(); // UI 업데이트
-}
-
-// ✅ 5. 키보드 네비게이션
-document.addEventListener('keydown', (e) => {
-  // 모달이 열려있을 때는 키보드 네비게이션 비활성화
-  const modal = document.getElementById('addCompanyModal');
-  if (modal && modal.style.display === 'flex') return;
-
-  switch (e.key) {
-    case 'ArrowRight':
-    case ' ': // 스페이스바
-      e.preventDefault();
-      nextCard();
-      break;
-    case 'ArrowLeft':
-      e.preventDefault();
-      prevCard();
-      break;
-    case 'Enter':
-      e.preventDefault();
-      const currentJob = jobData[current];
-      if (currentJob) applyToJob(currentJob.name);
-      break;
-    case 'h': // 하트
-    case 'l': // like
-      e.preventDefault();
-      const currentJobForLike = jobData[current];
-      if (currentJobForLike) likeCard(currentJobForLike.name);
-      break;
-  }
-});
-
-// ✅ 6. 기업 추가 모달 관련 함수들
-function openAddCompanyModal() {
-  document.getElementById('addCompanyModal').style.display = 'flex';
-  document.body.style.overflow = 'hidden'; // 배경 스크롤 방지
-}
-
-function closeAddCompanyModal() {
-  document.getElementById('addCompanyModal').style.display = 'none';
-  document.body.style.overflow = 'auto';
-  // 폼 초기화
-  document.getElementById('addCompanyForm').reset();
-}
-
-// 모달 외부 클릭 시 닫기
-document.addEventListener('click', function (e) {
-  const modal = document.getElementById('addCompanyModal');
-  if (e.target === modal) {
-    closeAddCompanyModal();
-  }
-});
-
-// ESC 키로 모달 닫기
-document.addEventListener('keydown', function (e) {
-  if (e.key === 'Escape') {
-    closeAddCompanyModal();
-  }
-});
-
-// ✅ 7. 기업 추가 폼 제출 처리
-document.addEventListener('DOMContentLoaded', function () {
-  const addCompanyForm = document.getElementById('addCompanyForm');
-  if (addCompanyForm) {
-    addCompanyForm.addEventListener('submit', function (e) {
-      e.preventDefault();
-      addNewCompany();
-    });
-  }
-});
-
-function addNewCompany() {
-  const formData = new FormData(document.getElementById('addCompanyForm'));
-
-  const newCompany = {
-    name: formData.get('companyName'),
-    location: formData.get('location'),
-    job: formData.get('job'),
-    category: formData.get('category'),
-    visa: formData.get('visa'),
-    rating: parseInt(formData.get('rating')),
-    logo: formData.get('logo') || `https://via.placeholder.com/100x100.png?text=${encodeURIComponent(formData.get('companyName'))}`,
-    description: formData.get('description') || ''
-  };
-
-  // 필수 필드 검증
-  if (!newCompany.name || !newCompany.location || !newCompany.job || !newCompany.category || !newCompany.visa || !newCompany.rating) {
-    alert('필수 항목을 모두 입력해주세요.');
-    return;
+  // 이전 버튼
+  if (currentPage > 1) {
+    paginationHTML += `<button class="page-btn" onclick="changePage(${currentPage - 1})">
+      <i class="fas fa-chevron-left"></i>
+    </button>`;
   }
 
-  // jobData 배열에 새 회사 추가
-  jobData.push(newCompany);
+  // 페이지 번호들
+  let startPage = Math.max(1, currentPage - 2);
+  let endPage = Math.min(totalPages, currentPage + 2);
 
-  // 현재 필터에 맞는 데이터도 업데이트
-  if (currentCategory === 'all' || currentCategory === newCompany.category) {
-    filteredJobData.push(newCompany);
+  if (startPage > 1) {
+    paginationHTML += `<button class="page-btn" onclick="changePage(1)">1</button>`;
+    if (startPage > 2) {
+      paginationHTML += `<span class="page-ellipsis">...</span>`;
+    }
   }
 
-  // 로컬 스토리지에 저장
-  localStorage.setItem('customJobs', JSON.stringify(jobData));
+  for (let i = startPage; i <= endPage; i++) {
+    paginationHTML += `<button class="page-btn ${i === currentPage ? 'active' : ''}" 
+      onclick="changePage(${i})">${i}</button>`;
+  }
 
-  // 카드 다시 렌더링
-  renderCards();
+  if (endPage < totalPages) {
+    if (endPage < totalPages - 1) {
+      paginationHTML += `<span class="page-ellipsis">...</span>`;
+    }
+    paginationHTML += `<button class="page-btn" onclick="changePage(${totalPages})">${totalPages}</button>`;
+  }
 
-  // 성공 메시지 및 모달 닫기
-  alert(`${newCompany.name} 기업이 성공적으로 추가되었습니다!`);
-  closeAddCompanyModal();
+  // 다음 버튼
+  if (currentPage < totalPages) {
+    paginationHTML += `<button class="page-btn" onclick="changePage(${currentPage + 1})">
+      <i class="fas fa-chevron-right"></i>
+    </button>`;
+  }
 
-  // 새로 추가된 카드로 이동
-  const newIndex = jobData.length - 1;
-  showCard(newIndex);
+  pagination.innerHTML = paginationHTML;
 }
 
-// ✅ 8. 특정 카드 표시 함수
-function showCard(index) {
-  const cards = document.querySelectorAll('.card');
-  if (cards.length === 0 || index < 0 || index >= cards.length) return;
+// 페이지 변경
+function changePage(page) {
+  currentPage = page;
+  renderJobs();
+  setupPagination();
 
-  // 모든 카드 비활성화
-  cards.forEach(card => card.classList.remove('active'));
-
-  // 지정된 카드 활성화
-  cards[index].classList.add('active');
-  current = index;
-
-  // UI 업데이트
-  updateUI();
+  // 맨 위로 스크롤
+  document.querySelector('.jobs-container').scrollIntoView({ behavior: 'smooth' });
 }
 
-// ✅ 9. UI 업데이트 함수 (진행률 + 카운터 + 버튼 상태)
-function updateUI() {
-  updateProgress();
-  updateCardCounter();
-  updateNavigationButtons();
+// 관심 등록/해제
+function toggleLike(jobId) {
+  if (likedJobs.has(jobId)) {
+    likedJobs.delete(jobId);
+  } else {
+    likedJobs.add(jobId);
+  }
+
+  localStorage.setItem('favoriteJobs', JSON.stringify([...likedJobs]));
+  renderJobs(); // 하트 아이콘 상태 업데이트
 }
 
-function updateProgress() {
-  const progressBar = document.getElementById('progress');
-  if (progressBar && jobData.length > 0) {
-    const progressPercent = ((current + 1) / jobData.length) * 100;
-    progressBar.style.width = `${progressPercent}%`;
+// 채용공고 상세보기
+function viewJobDetail(jobId) {
+  const job = window.jobData.find(j => j.id === jobId);
+  if (job) {
+    // 조회수 증가
+    job.views++;
+
+    // 상세보기 모달 또는 페이지로 이동
+    alert(`${job.title} - ${job.company}\n\n${job.description}\n\n상세 페이지 구현 예정입니다.`);
   }
 }
 
-function updateCardCounter() {
-  const currentCardNumber = document.getElementById('currentCardNumber');
-  const totalCards = document.getElementById('totalCards');
-
-  if (currentCardNumber && totalCards) {
-    currentCardNumber.textContent = current + 1;
-    totalCards.textContent = jobData.length;
-  }
-}
-
-function updateNavigationButtons() {
-  const prevBtn = document.getElementById('prevBtn');
-  const nextBtn = document.getElementById('nextBtn');
-
-  if (prevBtn && nextBtn) {
-    // 첫 번째 카드일 때 이전 버튼 비활성화
-    prevBtn.disabled = (current === 0);
-    // 마지막 카드일 때 다음 버튼 비활성화
-    nextBtn.disabled = (current === jobData.length - 1);
-  }
-}
-
-// ✅ 10. 페이지 로드 시 저장된 기업 데이터 불러오기
-function loadSavedJobs() {
-  const savedJobs = localStorage.getItem('customJobs');
-  if (savedJobs) {
-    const parsedJobs = JSON.parse(savedJobs);
-    // 기본 데이터와 저장된 데이터 병합 (중복 제거)
-    const existingNames = jobData.map(job => job.name);
-    const newJobs = parsedJobs.filter(job => !existingNames.includes(job.name));
-    jobData.push(...newJobs);
-  }
-}
-
-// ✅ 11. 터치/스와이프 기능
-let touchStartX = 0;
-let touchEndX = 0;
-
-function handleSwipe() {
-  const swipeThreshold = 50; // 최소 스와이프 거리
-  const swipeDistance = touchEndX - touchStartX;
-
-  if (Math.abs(swipeDistance) > swipeThreshold) {
-    if (swipeDistance > 0) {
-      // 오른쪽으로 스와이프 = 이전 카드
-      prevCard();
-    } else {
-      // 왼쪽으로 스와이프 = 다음 카드
-      nextCard();
+// 지원하기
+function applyToJob(jobId) {
+  const job = window.jobData.find(j => j.id === jobId);
+  if (job) {
+    if (confirm(`${job.company}의 ${job.title} 포지션에 지원하시겠습니까?`)) {
+      alert("지원이 완료되었습니다!\n\n지원 현황은 마이페이지에서 확인할 수 있습니다.");
     }
   }
 }
 
-// 터치 이벤트 리스너 추가
+// 채용공고 등록 모달
+function openAddJobModal() {
+  const modal = document.getElementById('addJobModal');
+  if (modal) {
+    modal.style.display = 'block';
+  }
+}
+
+function closeAddJobModal() {
+  const modal = document.getElementById('addJobModal');
+  if (modal) {
+    modal.style.display = 'none';
+    document.getElementById('addJobForm').reset();
+  }
+}
+
+// 채용공고 등록 폼 제출
 document.addEventListener('DOMContentLoaded', function () {
-  const cardContainer = document.getElementById('cardContainer');
+  const addJobForm = document.getElementById('addJobForm');
+  if (addJobForm) {
+    addJobForm.addEventListener('submit', function (e) {
+      e.preventDefault();
 
-  if (cardContainer) {
-    // 터치 시작
-    cardContainer.addEventListener('touchstart', (e) => {
-      touchStartX = e.touches[0].clientX;
-    }, { passive: true });
+      const formData = new FormData(this);
+      const jobData = Object.fromEntries(formData);
 
-    // 터치 종료
-    cardContainer.addEventListener('touchend', (e) => {
-      touchEndX = e.changedTouches[0].clientX;
-      handleSwipe();
-    }, { passive: true });
+      // 새로운 ID 생성
+      jobData.id = Date.now();
+      jobData.visa = jobData.visa ? [jobData.visa] : [];
+      jobData.posted = new Date().toISOString().split('T')[0];
+      jobData.views = 0;
 
-    // 마우스 드래그도 지원
-    let isMouseDown = false;
-
-    cardContainer.addEventListener('mousedown', (e) => {
-      isMouseDown = true;
-      touchStartX = e.clientX;
-      cardContainer.style.cursor = 'grabbing';
-    });
-
-    cardContainer.addEventListener('mousemove', (e) => {
-      if (isMouseDown) {
-        e.preventDefault();
+      // 기본 로고 설정
+      if (!jobData.logo) {
+        jobData.logo = `https://via.placeholder.com/60x60.png?text=${jobData.company.charAt(0).toUpperCase()}`;
       }
-    });
 
-    cardContainer.addEventListener('mouseup', (e) => {
-      if (isMouseDown) {
-        touchEndX = e.clientX;
-        handleSwipe();
-        isMouseDown = false;
-        cardContainer.style.cursor = 'grab';
-      }
-    });
+      // 샘플 데이터에 추가 (실제 구현에서는 API 호출)
+      window.jobData.push(jobData);
+      filteredJobs = [...window.jobData];
 
-    cardContainer.addEventListener('mouseleave', () => {
-      isMouseDown = false;
-      cardContainer.style.cursor = 'grab';
-    });
+      // UI 업데이트
+      renderJobs();
+      setupPagination();
 
-    // 커서 스타일 설정
-    cardContainer.style.cursor = 'grab';
+      // 모달 닫기
+      closeAddJobModal();
+
+      alert('채용공고가 성공적으로 등록되었습니다!');
+    });
   }
 });
 
-// 로그아웃 기능
+// 필터 초기화
+function resetFilters() {
+  // 모든 체크박스 해제
+  document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+  document.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+
+  // 필터 적용
+  applyFilters();
+}
+
+// 고급 필터 적용
+function applyFilters() {
+  let filtered = [...window.jobData];
+
+  // 고용형태 필터
+  const employmentFilters = Array.from(document.querySelectorAll('input[name="employment"]:checked')).map(cb => cb.value);
+  if (employmentFilters.length > 0) {
+    filtered = filtered.filter(job => employmentFilters.includes(job.employment));
+  }
+
+  // 급여 필터
+  const salaryFilters = Array.from(document.querySelectorAll('input[name="salary"]:checked')).map(cb => cb.value);
+  if (salaryFilters.length > 0) {
+    filtered = filtered.filter(job => salaryFilters.includes(job.salary));
+  }
+
+  // 비자 필터
+  const visaFilters = Array.from(document.querySelectorAll('input[name="visa"]:checked')).map(cb => cb.value);
+  if (visaFilters.length > 0) {
+    filtered = filtered.filter(job => job.visa.some(v => visaFilters.includes(v)));
+  }
+
+  // 언어 수준 필터
+  const koreanLevel = document.querySelector('select[name="korean-level"]').value;
+  const englishLevel = document.querySelector('select[name="english-level"]').value;
+
+  if (koreanLevel) {
+    // 언어 수준 비교 로직 (간단화)
+    filtered = filtered.filter(job => job.korean === koreanLevel || job.korean === 'basic');
+  }
+
+  if (englishLevel) {
+    filtered = filtered.filter(job => job.english === englishLevel || job.english === 'basic');
+  }
+
+  filteredJobs = filtered;
+  currentPage = 1;
+  renderJobs();
+  setupPagination();
+
+  // 고급 필터 패널 닫기
+  const advancedFilters = document.querySelector('.advanced-filters');
+  const mainContent = document.querySelector('.main-content');
+
+  if (advancedFilters) {
+    advancedFilters.classList.remove('show');
+  }
+
+  // 메인 콘텐츠 위치 헤더 높이에 맞춰 조정
+  adjustMainContentPosition(true); // 동적 조정 (transition 사용)
+}
+
+// 저장된 데이터 불러오기
+function loadSavedJobs() {
+  const saved = localStorage.getItem('favoriteJobs');
+  if (saved) {
+    likedJobs = new Set(JSON.parse(saved));
+  }
+}
+
+// 로그아웃
 function logout() {
-  if (confirm('로그아웃 하시겠습니까?')) {
+  if (confirm("로그아웃 하시겠습니까?")) {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    localStorage.removeItem('favorites');
     window.location.href = 'login.html';
   }
 }

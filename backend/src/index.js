@@ -76,7 +76,5 @@ app.use(errorHandler);
 
 // 서버 시작
 app.listen(PORT, () => {
-  console.log(`✅ Server running on http://localhost:${PORT}`);
-  console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`📊 Health check: http://localhost:${PORT}/health`);
+  console.log(`Server running on http://localhost:${PORT}`);
 });

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>커뮤니티 - Feeling Good</title>
     <!-- <link rel="stylesheet" href="../css/login.css"> -->
+    <link rel="stylesheet" href="../css/common.css">
     <link rel="stylesheet" href="../css/community.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -31,28 +32,106 @@
                 </button>
             </div>
         </div>
+
+        <!-- 필터 섹션 추가 -->
+        <div class="filter-section">
+            <div class="filter-content">
+                <div class="filter-group">
+                    <button class="filter-button active" data-category="all" onclick="filterPosts('all')">
+                        <i class="fas fa-th"></i> <span data-translate="전체">전체</span>
+                    </button>
+                    <button class="filter-button" data-category="job-info" onclick="filterPosts('job-info')">
+                        <i class="fas fa-briefcase"></i> <span data-translate="취업정보">취업정보</span>
+                    </button>
+                    <button class="filter-button" data-category="life-tips" onclick="filterPosts('life-tips')">
+                        <i class="fas fa-lightbulb"></i> <span data-translate="생활팁">생활팁</span>
+                    </button>
+                    <button class="filter-button" data-category="qna" onclick="filterPosts('qna')">
+                        <i class="fas fa-question-circle"></i> <span data-translate="Q&A">Q&A</span>
+                    </button>
+                    <button class="filter-button" data-category="free-talk" onclick="filterPosts('free-talk')">
+                        <i class="fas fa-comments"></i> <span data-translate="자유게시판">자유게시판</span>
+                    </button>
+                </div>
+                <button class="advanced-filter-toggle" onclick="toggleAdvancedFilters()">
+                    <i class="fas fa-sliders-h"></i> <span data-translate="상세 검색">상세 검색</span>
+                </button>
+            </div>
+
+            <!-- 고급 필터 -->
+            <div class="advanced-filters" id="advancedFilters">
+                <div class="advanced-filter-content">
+                    <div class="filter-column">
+                        <h4 data-translate="기간">기간</h4>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="period" value="today"> <span
+                                    data-translate="오늘">오늘</span></label>
+                            <label><input type="checkbox" name="period" value="week"> <span
+                                    data-translate="일주일">일주일</span></label>
+                            <label><input type="checkbox" name="period" value="month"> <span
+                                    data-translate="한달">한달</span></label>
+                            <label><input type="checkbox" name="period" value="year"> <span
+                                    data-translate="일년">일년</span></label>
+                        </div>
+                    </div>
+                    <div class="filter-column">
+                        <h4 data-translate="인기도">인기도</h4>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="popularity" value="high"> <span
+                                    data-translate="인기글">인기글</span></label>
+                            <label><input type="checkbox" name="popularity" value="trending"> <span
+                                    data-translate="급상승">급상승</span></label>
+                            <label><input type="checkbox" name="popularity" value="discussed"> <span
+                                    data-translate="댓글많은">댓글많은</span></label>
+                        </div>
+                    </div>
+                    <div class="filter-column">
+                        <h4 data-translate="작성자">작성자</h4>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="author" value="verified"> <span
+                                    data-translate="인증회원">인증회원</span></label>
+                            <label><input type="checkbox" name="author" value="expert"> <span
+                                    data-translate="전문가">전문가</span></label>
+                            <label><input type="checkbox" name="author" value="newcomer"> <span
+                                    data-translate="신규회원">신규회원</span></label>
+                        </div>
+                    </div>
+                    <div class="filter-column">
+                        <h4 data-translate="언어">언어</h4>
+                        <div class="language-section">
+                            <div class="language-row">
+                                <span data-translate="한국어">한국어</span>
+                                <input type="checkbox" name="language" value="ko">
+                            </div>
+                            <div class="language-row">
+                                <span data-translate="영어">영어</span>
+                                <input type="checkbox" name="language" value="en">
+                            </div>
+                            <div class="language-row">
+                                <span data-translate="중국어">중국어</span>
+                                <input type="checkbox" name="language" value="zh">
+                            </div>
+                            <div class="language-row">
+                                <span data-translate="일본어">일본어</span>
+                                <input type="checkbox" name="language" value="ja">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="filter-actions">
+                    <button class="btn btn-outline" onclick="resetAdvancedFilters()">
+                        <span data-translate="초기화">초기화</span>
+                    </button>
+                    <button class="btn btn-primary" onclick="applyAdvancedFilters()">
+                        <span data-translate="적용하기">적용하기</span>
+                    </button>
+                </div>
+            </div>
+        </div>
     </header>
 
     <div class="main-content">
         <div class="community-container">
-            <!-- 카테고리 탭 -->
-            <div class="category-tabs">
-                <button class="tab-btn active" data-category="all" onclick="filterPosts('all')">
-                    <i class="fas fa-th"></i> 전체
-                </button>
-                <button class="tab-btn" data-category="job-info" onclick="filterPosts('job-info')">
-                    <i class="fas fa-briefcase"></i> 취업정보
-                </button>
-                <button class="tab-btn" data-category="life-tips" onclick="filterPosts('life-tips')">
-                    <i class="fas fa-lightbulb"></i> 생활팁
-                </button>
-                <button class="tab-btn" data-category="qna" onclick="filterPosts('qna')">
-                    <i class="fas fa-question-circle"></i> Q&A
-                </button>
-                <button class="tab-btn" data-category="free-talk" onclick="filterPosts('free-talk')">
-                    <i class="fas fa-comments"></i> 자유게시판
-                </button>
-            </div>
 
             <!-- 검색 바 -->
             <div class="search-bar">
@@ -202,54 +281,7 @@
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-section">
-                <div class="footer-logo">
-                    <i class="fas fa-briefcase"></i>
-                    <span>Feeling Good</span>
-                </div>
-                <p class="footer-description" data-translate="외국인을 위한 한국 취업 지원 플랫폼">외국인을 위한 한국 취업 지원 플랫폼</p>
-            </div>
 
-            <div class="footer-section">
-                <h4 data-translate="고객지원">고객지원</h4>
-                <div class="contact-info">
-                    <p><i class="fas fa-phone"></i> 1588-1234</p>
-                    <p><i class="fas fa-envelope"></i> help@feelinggood.kr</p>
-                    <p><i class="fas fa-clock"></i> <span data-translate="평일 09:00 - 18:00">평일 09:00 - 18:00</span></p>
-                </div>
-            </div>
-
-            <div class="footer-section">
-                <h4 data-translate="서비스">서비스</h4>
-                <ul class="footer-links">
-                    <li><a href="jobs.html" data-translate="채용정보">채용정보</a></li>
-                    <li><a href="community.html" data-translate="커뮤니티">커뮤니티</a></li>
-                    <li><a href="mypage.html" data-translate="마이페이지">마이페이지</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-section">
-                <h4 data-translate="언어 선택">언어 선택</h4>
-                <div class="language-options">
-                    <span data-translate="한국어">한국어</span> |
-                    <span data-translate="English">English</span> |
-                    <span data-translate="Tiếng Việt">Tiếng Việt</span>
-                </div>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-facebook"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
-                </div>
-            </div>
-        </div>
-
-        <div class="footer-bottom">
-            <p>&copy; 2024 Feeling Good. <span data-translate="All rights reserved.">All rights reserved.</span></p>
-        </div>
-    </footer>
 
     <script src="../js/translate.js"></script>
     <script src="../js/community.js"></script>

@@ -4,7 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KOJOB - 외국인 구직자를 위한 채용 플랫폼</title>
+  <title>채용정보 - Feeling Good</title>
+  <link rel="stylesheet" href="../css/common.css">
   <link rel="stylesheet" href="../css/jobs.css">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -12,36 +13,27 @@
 
 <body>
   <header class="header">
-    <div class="header-top">
-      <div class="header-top-content">
-        <a href="#"><i class="fas fa-info-circle"></i> <span data-translate="공지사항">공지사항</span></a>
-        <a href="#"><i class="fas fa-headset"></i> <span data-translate="고객센터">고객센터</span></a>
-        <a href="#" id="languageSelector"><i class="fas fa-globe"></i> <span data-translate="English">English</span></a>
-      </div>
-    </div>
     <div class="header-main">
-      <a href="jobs.html" class="logo">
+      <div class="logo">
         <i class="fas fa-briefcase"></i>
-        KOJOB
-      </a>
+        <span>Feeling Good</span>
+      </div>
       <nav class="nav-menu">
         <a href="jobs.html" class="nav-link active" data-translate="채용정보">채용정보</a>
         <a href="community.html" class="nav-link" data-translate="커뮤니티">커뮤니티</a>
         <a href="mypage.html" class="nav-link" data-translate="마이페이지">마이페이지</a>
-        <a href="#" class="nav-link" data-translate="비자정보">비자정보</a>
       </nav>
       <div class="header-buttons">
-        <button class="btn btn-outline" onclick="location.href='mypage.html'">
-          <i class="fas fa-user"></i> <span data-translate="마이페이지">마이페이지</span>
-        </button>
-        <button class="btn btn-secondary" onclick="openAddCompanyModal()">
-          <i class="fas fa-plus"></i> <span data-translate="기업 추가">기업 추가</span>
-        </button>
-        <button class="btn btn-primary" onclick="logout()">
-          <i class="fas fa-sign-out-alt"></i> <span data-translate="로그아웃">로그아웃</span>
+        <a href="#" id="languageSelector" class="language-btn"><i class="fas fa-globe"></i> <span
+            data-translate="Language">Language</span></a>
+        <a href="#" onclick="logout()" class="logout-btn" data-translate="로그아웃">로그아웃</a>
+        <button class="btn btn-primary" onclick="openAddJobModal()">
+          <i class="fas fa-plus"></i> <span data-translate="채용공고 등록">채용공고 등록</span>
         </button>
       </div>
     </div>
+
+    <!-- 필터 섹션을 헤더 내부로 이동 -->
     <div class="filter-section">
       <div class="filter-content">
         <div class="filter-group">
@@ -151,73 +143,72 @@
   </header>
 
   <div class="main-content">
-    <div class="cards-section">
-      <div class="card-navigation">
-        <button class="nav-btn prev-btn" onclick="prevCard()" id="prevBtn">
-          <i class="fas fa-chevron-left"></i>
-        </button>
-
-        <div class="card-container" id="cardContainer"></div>
-
-        <button class="nav-btn next-btn" onclick="nextCard()" id="nextBtn">
-          <i class="fas fa-chevron-right"></i>
-        </button>
-      </div>
-
-      <div class="card-info">
-        <div class="card-counter">
-          <span id="currentCardNumber">1</span> / <span id="totalCards">3</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress" id="progress"></div>
+    <div class="jobs-container">
+      <!-- 검색 바 추가 (커뮤니티 스타일) -->
+      <div class="search-bar">
+        <div class="search-input-group">
+          <select id="searchType" class="search-select">
+            <option value="title">직무명</option>
+            <option value="company">회사명</option>
+            <option value="location">지역</option>
+            <option value="all">전체</option>
+          </select>
+          <input type="text" id="searchInput" placeholder="검색어를 입력하세요..." onkeypress="handleSearchEnter(event)">
+          <button class="search-btn" onclick="searchJobs()">
+            <i class="fas fa-search"></i>
+          </button>
         </div>
       </div>
 
-      <div class="control-hints">
-        <div class="hint-item">
-          <span class="key"><i class="fas fa-arrow-left"></i></span>
-          <span data-translate="이전">이전</span>
+      <!-- 채용공고 목록 헤더 -->
+      <div class="jobs-header">
+        <div class="jobs-count">
+          총 <span id="jobsCount">0</span>개의 채용공고
         </div>
-        <div class="hint-item">
-          <span class="key">Space</span>
-          <span data-translate="다음">다음</span>
-        </div>
-        <div class="hint-item">
-          <span class="key"><i class="fas fa-heart"></i></span>
-          <span data-translate="관심 등록">관심 등록</span>
-        </div>
-        <div class="hint-item">
-          <span class="key">Enter</span>
-          <span data-translate="지원하기">지원하기</span>
+        <div class="sort-options">
+          <select id="sortType" onchange="sortJobs(this.value)">
+            <option value="latest">최신순</option>
+            <option value="deadline">마감순</option>
+            <option value="salary">급여순</option>
+          </select>
         </div>
       </div>
-    </div>
 
-    <div class="favorites-section">
-      <div class="favorites-header">
-        <h3><i class="fas fa-heart"></i> <span data-translate="관심 기업 목록">관심 기업 목록</span></h3>
-        <span class="favorite-count" id="favoriteCount">0</span>
+      <!-- 채용공고 목록 (커뮤니티 스타일의 리스트) -->
+      <div class="jobs-list" id="jobsList">
+        <!-- 채용공고 목록이 여기에 동적으로 생성됩니다 -->
       </div>
-      <ul id="favoriteList"></ul>
+
+      <!-- 페이지네이션 -->
+      <div class="pagination" id="pagination">
+        <!-- 페이지 번호가 여기에 동적으로 생성됩니다 -->
+      </div>
     </div>
   </div>
 
-  <!-- 기업 추가 모달 -->
-  <div id="addCompanyModal" class="modal" style="display: none;">
+  <!-- 채용공고 등록 모달 -->
+  <div id="addJobModal" class="modal" style="display: none;">
     <div class="modal-content">
       <div class="modal-header">
-        <h2><i class="fas fa-building"></i> <span data-translate="새 기업 추가">새 기업 추가</span></h2>
-        <span class="close" onclick="closeAddCompanyModal()">&times;</span>
+        <h2><i class="fas fa-plus"></i> 새 채용공고 등록</h2>
+        <span class="close" onclick="closeAddJobModal()">&times;</span>
       </div>
-      <form id="addCompanyForm" class="modal-form">
+      <form id="addJobForm" class="modal-form">
         <div class="form-row">
           <div class="form-group">
-            <label for="companyName">회사명 *</label>
-            <input type="text" id="companyName" name="companyName" required>
+            <label for="jobTitle">직무명 *</label>
+            <input type="text" id="jobTitle" name="title" required placeholder="예: 프론트엔드 개발자">
           </div>
           <div class="form-group">
-            <label for="companyLocation">지역 *</label>
-            <select id="companyLocation" name="location" required>
+            <label for="companyName">회사명 *</label>
+            <input type="text" id="companyName" name="company" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="jobLocation">지역 *</label>
+            <select id="jobLocation" name="location" required>
               <option value="">선택하세요</option>
               <option value="서울">서울</option>
               <option value="경기">경기</option>
@@ -230,66 +221,64 @@
               <option value="기타">기타</option>
             </select>
           </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label for="jobTitle">직무명 *</label>
-            <input type="text" id="jobTitle" name="job" required placeholder="예: 마케팅 인턴, 제조 작업자">
-          </div>
           <div class="form-group">
             <label for="jobCategory">직무 카테고리 *</label>
             <select id="jobCategory" name="category" required>
               <option value="">선택하세요</option>
-              <option value="IT개발">IT개발</option>
-              <option value="교육">교육</option>
-              <option value="무역사무">무역사무</option>
-              <option value="서비스">서비스</option>
-              <option value="제조업">제조업</option>
-              <option value="기타">기타</option>
+              <option value="it">IT개발</option>
+              <option value="education">교육</option>
+              <option value="trade">무역사무</option>
+              <option value="service">서비스</option>
+              <option value="manufacture">제조업</option>
+              <option value="design">기타</option>
             </select>
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label for="visaSupport">비자 지원 *</label>
-            <select id="visaSupport" name="visa" required>
+            <label for="employment">고용형태 *</label>
+            <select id="employment" name="employment" required>
               <option value="">선택하세요</option>
-              <option value="지원 가능">지원 가능</option>
-              <option value="지원 불가능">지원 불가능</option>
+              <option value="정규직">정규직</option>
+              <option value="계약직">계약직</option>
+              <option value="파견직">파견직</option>
+              <option value="인턴">인턴</option>
             </select>
           </div>
           <div class="form-group">
-            <label for="companyRating">평점 *</label>
-            <select id="companyRating" name="rating" required>
+            <label for="salary">급여 *</label>
+            <select id="salary" name="salary" required>
               <option value="">선택하세요</option>
-              <option value="5">⭐⭐⭐⭐⭐ (5점)</option>
-              <option value="4">⭐⭐⭐⭐☆ (4점)</option>
-              <option value="3">⭐⭐⭐☆☆ (3점)</option>
-              <option value="2">⭐⭐☆☆☆ (2점)</option>
-              <option value="1">⭐☆☆☆☆ (1점)</option>
+              <option value="2000-3000">2,000~3,000만원</option>
+              <option value="3000-4000">3,000~4,000만원</option>
+              <option value="4000-5000">4,000~5,000만원</option>
+              <option value="5000+">5,000만원 이상</option>
             </select>
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label for="companyLogo">로고 URL</label>
-            <input type="url" id="companyLogo" name="logo" placeholder="https://example.com/logo.png">
+            <label for="deadline">지원 마감일 *</label>
+            <input type="date" id="deadline" name="deadline" required>
+          </div>
+          <div class="form-group">
+            <label for="logoUrl">로고 URL</label>
+            <input type="url" id="logoUrl" name="logo" placeholder="https://example.com/logo.png">
           </div>
         </div>
 
         <div class="form-group full-width">
-          <label for="jobDescription">상세 설명</label>
-          <textarea id="jobDescription" name="description" rows="3"
-            placeholder="회사 및 직무에 대한 상세 설명을 입력하세요..."></textarea>
+          <label for="jobDescription">상세 설명 *</label>
+          <textarea id="jobDescription" name="description" rows="5" required
+            placeholder="채용공고에 대한 상세 설명을 입력하세요..."></textarea>
         </div>
 
         <div class="modal-actions">
-          <button type="button" class="btn btn-outline" onclick="closeAddCompanyModal()">취소</button>
+          <button type="button" class="btn btn-outline" onclick="closeAddJobModal()">취소</button>
           <button type="submit" class="btn btn-primary">
-            <i class="fas fa-plus"></i> 기업 추가
+            <i class="fas fa-paper-plane"></i> 채용공고 등록
           </button>
         </div>
       </form>
