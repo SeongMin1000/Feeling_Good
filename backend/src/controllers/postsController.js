@@ -99,21 +99,22 @@ exports.getPostDetail = async (req, res) => {
 // 게시글 작성
 exports.createPost = async (req, res) => {
   try {
-    const { title, content, category, isAnonymous } = req.body;
+    const { title, content, category, isAnonymous, authorId, authorName } = req.body;
     const token = req.headers.authorization?.replace('Bearer ', '');
     if (!token) {
       return res.status(401).json({ error: '로그인이 필요합니다.' });
     }
-    // TODO: JWT 토큰 검증 및 사용자 정보 추출
-    const authorId = 1; // 실제로는 토큰에서 추출
-    const authorName = isAnonymous ? '익명' : '사용자'; // 실제로는 사용자 정보에서 추출
+
+    // 클라이언트에서 전송된 사용자 정보 사용
+    const finalAuthorId = authorId || 1;
+    const finalAuthorName = isAnonymous ? '익명' : (authorName || '사용자');
     const [result] = await pool.query(
       'INSERT INTO posts (title, content, author_id, author_name, category, is_anonymous) VALUES (?, ?, ?, ?, ?, ?)',
-      [title, content, authorId, authorName, category, isAnonymous]
+      [title, content, finalAuthorId, finalAuthorName, category, isAnonymous]
     );
-    res.json({ 
-      id: result.insertId, 
-      message: '게시글이 등록되었습니다.' 
+    res.json({
+      id: result.insertId,
+      message: '게시글이 등록되었습니다.'
     });
   } catch (error) {
     console.error('게시글 작성 오류:', error);
@@ -161,25 +162,26 @@ exports.getComments = async (req, res) => {
 exports.createComment = async (req, res) => {
   try {
     const { id } = req.params;
-    const { content } = req.body;
+    const { content, authorId, authorName } = req.body;
     const token = req.headers.authorization?.replace('Bearer ', '');
     if (!token) {
       return res.status(401).json({ error: '로그인이 필요합니다.' });
     }
-    // TODO: JWT 토큰 검증 및 사용자 정보 추출
-    const authorId = 1; // 실제로는 토큰에서 추출
-    const authorName = '사용자'; // 실제로는 사용자 정보에서 추출
+
+    // 클라이언트에서 전송된 사용자 정보 사용
+    const finalAuthorId = authorId || 1;
+    const finalAuthorName = authorName || '사용자';
     const [commentResult] = await pool.query(
       'INSERT INTO comments (post_id, author_id, author_name, content) VALUES (?, ?, ?, ?)',
-      [id, authorId, authorName, content]
+      [id, finalAuthorId, finalAuthorName, content]
     );
     await pool.query(
       'UPDATE posts SET comment_count = comment_count + 1 WHERE id = ?',
       [id]
     );
-    res.json({ 
-      id: commentResult.insertId, 
-      message: '댓글이 등록되었습니다.' 
+    res.json({
+      id: commentResult.insertId,
+      message: '댓글이 등록되었습니다.'
     });
   } catch (error) {
     console.error('댓글 작성 오류:', error);
