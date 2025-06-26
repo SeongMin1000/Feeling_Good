@@ -5,218 +5,249 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>회원가입 - Feeling Good</title>
-  <link rel="stylesheet" href="../css/login.css" />
   <link rel="stylesheet" href="../css/common.css">
+  <link rel="stylesheet" href="../css/login.css" />
   <link rel="stylesheet" href="../css/register.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 
 <body>
-  <div class="auth-container">
-    <!-- 언어 선택 버튼 -->
-    <div style="position: absolute; top: 20px; right: 20px;">
-      <a href="#" id="languageSelector" style="color: #666; text-decoration: none; font-size: 14px;">
-        <i class="fas fa-globe"></i> <span data-translate="Language">Language</span>
-      </a>
+  <!-- 상단 헤더 -->
+  <header class="auth-header">
+    <div class="auth-header-content">
+      <div class="logo">
+        <i class="fas fa-briefcase"></i>
+        <span>Feeling Good</span>
+      </div>
+      <div class="header-buttons">
+        <a href="#" id="languageSelector" class="language-btn">
+          <i class="fas fa-globe"></i>
+          <span data-translate="Language">Language</span>
+        </a>
+      </div>
     </div>
+  </header>
 
-    <h1 data-translate="회원가입">회원가입</h1>
-    <form id="registerForm" class="auth-form">
-      <!-- 기본 정보 -->
-      <fieldset>
-        <legend data-translate="기본 정보">기본 정보</legend>
-        <div class="form-group">
-          <label for="userType" data-translate="회원 유형 *">회원 유형 *</label>
-          <select id="userType" name="userType" required>
-            <option value="" data-translate="선택하세요">선택하세요</option>
-            <option value="구직자" data-translate="구직자 (일자리를 찾는 분)">구직자 (일자리를 찾는 분)</option>
-            <option value="고용주" data-translate="고용주 (직원을 채용하는 분)">고용주 (직원을 채용하는 분)</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="username">이름/닉네임 *</label>
-          <input type="text" id="username" name="username" required />
-        </div>
-        <div class="form-group">
-          <label for="age">나이 *</label>
-          <input type="number" id="age" name="age" required />
-        </div>
-        <div class="form-group">
-          <label for="gender">성별</label>
-          <select id="gender" name="gender">
-            <option value="">선택하세요</option>
-            <option value="남성">남성</option>
-            <option value="여성">여성</option>
-            <option value="기타">기타</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="email">이메일 *</label>
-          <input type="email" id="email" name="email" required />
-        </div>
-        <div class="form-group">
-          <label for="phone">전화번호</label>
-          <input type="tel" id="phone" name="phone" />
-        </div>
-        <div class="form-group">
-          <label for="password">비밀번호 *</label>
-          <input type="password" id="password" name="password" required />
-        </div>
-      </fieldset>
+  <!-- 메인 콘텐츠 -->
+  <div class="auth-main">
+    <div class="auth-container register-container">
+      <div class="auth-header-section">
+        <h1><i class="fas fa-user-plus"></i> <span data-translate="회원가입">회원가입</span></h1>
+        <p data-translate="Feeling Good에 가입하여 새로운 기회를 찾아보세요">Feeling Good에 가입하여 새로운 기회를 찾아보세요</p>
+      </div>
+      <form id="registerForm" class="auth-form">
+        <!-- 기본 정보 -->
+        <fieldset>
+          <legend data-translate="기본 정보">기본 정보</legend>
+          <div class="form-group">
+            <label for="userType" data-translate="회원 유형 *">회원 유형 *</label>
+            <select id="userType" name="userType" required>
+              <option value="" data-translate="선택하세요">선택하세요</option>
+              <option value="구직자" data-translate="구직자 (일자리를 찾는 분)">구직자 (일자리를 찾는 분)</option>
+              <option value="고용주" data-translate="고용주 (직원을 채용하는 분)">고용주 (직원을 채용하는 분)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="username">이름/닉네임 *</label>
+            <input type="text" id="username" name="username" required />
+          </div>
+          <div class="form-group">
+            <label for="age">나이 *</label>
+            <input type="number" id="age" name="age" required />
+          </div>
+          <div class="form-group">
+            <label for="gender">성별</label>
+            <select id="gender" name="gender">
+              <option value="">선택하세요</option>
+              <option value="남성">남성</option>
+              <option value="여성">여성</option>
+              <option value="기타">기타</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="email">이메일 *</label>
+            <input type="email" id="email" name="email" required />
+          </div>
+          <div class="form-group">
+            <label for="phone">전화번호</label>
+            <input type="tel" id="phone" name="phone" />
+          </div>
+          <div class="form-group">
+            <label for="password">비밀번호 *</label>
+            <div class="password-input-container">
+              <input type="password" id="password" name="password" required />
+              <button type="button" class="password-toggle" onclick="togglePassword('password')">
+                <i class="fas fa-eye" id="password-toggle-icon"></i>
+              </button>
+            </div>
+          </div>
+        </fieldset>
 
-      <!-- 체류 정보 (구직자 전용) -->
-      <fieldset class="jobseeker-only" style="display: none;">
-        <legend>체류 정보</legend>
-        <div class="form-group">
-          <label for="nationality">국적 *</label>
-          <select id="nationality" name="nationality" required>
-            <option value="">선택하세요</option>
-            <option value="베트남">베트남</option>
-            <option value="중국">중국</option>
-            <option value="필리핀">필리핀</option>
-            <option value="태국">태국</option>
-            <option value="우즈베키스탄">우즈베키스탄</option>
-            <option value="기타">기타</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="visaType">비자 종류 *</label>
-          <select id="visaType" name="visaType" required>
-            <option value="">선택하세요</option>
-            <option value="E-9">E-9 (비전문취업)</option>
-            <option value="D-4">D-4 (일반연수)</option>
-            <option value="F-2">F-2 (거주)</option>
-            <option value="F-4">F-4 (재외동포)</option>
-            <option value="F-6">F-6 (결혼이민)</option>
-            <option value="H-2">H-2 (방문취업)</option>
-            <option value="기타">기타</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="visaExpiry">비자 만료일</label>
-          <input type="date" id="visaExpiry" name="visaExpiry" />
-        </div>
-      </fieldset>
+        <!-- 체류 정보 (구직자 전용) -->
+        <fieldset class="jobseeker-only" style="display: none;">
+          <legend>체류 정보</legend>
+          <div class="form-group">
+            <label for="nationality">국적 *</label>
+            <select id="nationality" name="nationality" required>
+              <option value="">선택하세요</option>
+              <option value="베트남">베트남</option>
+              <option value="중국">중국</option>
+              <option value="필리핀">필리핀</option>
+              <option value="태국">태국</option>
+              <option value="우즈베키스탄">우즈베키스탄</option>
+              <option value="기타">기타</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="visaType">비자 종류 *</label>
+            <select id="visaType" name="visaType" required>
+              <option value="">선택하세요</option>
+              <option value="E-9">E-9 (비전문취업)</option>
+              <option value="D-4">D-4 (일반연수)</option>
+              <option value="F-2">F-2 (거주)</option>
+              <option value="F-4">F-4 (재외동포)</option>
+              <option value="F-6">F-6 (결혼이민)</option>
+              <option value="H-2">H-2 (방문취업)</option>
+              <option value="기타">기타</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="visaExpiry">비자 만료일</label>
+            <input type="date" id="visaExpiry" name="visaExpiry" />
+          </div>
+        </fieldset>
 
-      <!-- 거주/근무 조건 -->
-      <fieldset>
-        <legend>거주/근무 조건</legend>
-        <div class="form-group">
-          <label for="currentLocation">현재 거주 지역 *</label>
-          <select id="currentLocation" name="currentLocation" required>
-            <option value="">선택하세요</option>
-            <option value="서울">서울</option>
-            <option value="경기">경기</option>
-            <option value="인천">인천</option>
-            <option value="부산">부산</option>
-            <option value="대구">대구</option>
-            <option value="광주">광주</option>
-            <option value="대전">대전</option>
-            <option value="울산">울산</option>
-            <option value="기타">기타</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="workType">희망 근무형태</label>
-          <select id="workType" name="workType">
-            <option value="">선택하세요</option>
-            <option value="풀타임">풀타임</option>
-            <option value="파트타임">파트타임</option>
-            <option value="교대근무">교대근무</option>
-          </select>
-        </div>
-      </fieldset>
+        <!-- 거주/근무 조건 -->
+        <fieldset>
+          <legend>거주/근무 조건</legend>
+          <div class="form-group">
+            <label for="currentLocation">현재 거주 지역 *</label>
+            <select id="currentLocation" name="currentLocation" required>
+              <option value="">선택하세요</option>
+              <option value="서울">서울</option>
+              <option value="경기">경기</option>
+              <option value="인천">인천</option>
+              <option value="부산">부산</option>
+              <option value="대구">대구</option>
+              <option value="광주">광주</option>
+              <option value="대전">대전</option>
+              <option value="울산">울산</option>
+              <option value="기타">기타</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="workType">희망 근무형태</label>
+            <select id="workType" name="workType">
+              <option value="">선택하세요</option>
+              <option value="풀타임">풀타임</option>
+              <option value="파트타임">파트타임</option>
+              <option value="교대근무">교대근무</option>
+            </select>
+          </div>
+        </fieldset>
 
-      <!-- 회사 정보 (고용주 전용) -->
-      <fieldset class="employer-only" style="display: none;">
-        <legend>회사 정보</legend>
-        <div class="form-group">
-          <label for="companyName">회사명 *</label>
-          <input type="text" id="companyName" name="companyName" />
-        </div>
-        <div class="form-group">
-          <label for="businessNumber">사업자등록번호</label>
-          <input type="text" id="businessNumber" name="businessNumber" placeholder="000-00-00000"
-            data-translate-placeholder="000-00-00000" />
-        </div>
-        <div class="form-group">
-          <label for="industry">업종 *</label>
-          <select id="industry" name="industry">
-            <option value="">선택하세요</option>
-            <option value="제조업">제조업</option>
-            <option value="건설업">건설업</option>
-            <option value="농축산업">농축산업</option>
-            <option value="어업">어업</option>
-            <option value="서비스업">서비스업</option>
-            <option value="음식업">음식업</option>
-            <option value="소매업">소매업</option>
-            <option value="IT/기술">IT/기술</option>
-            <option value="기타">기타</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="companySize">회사 규모</label>
-          <select id="companySize" name="companySize">
-            <option value="">선택하세요</option>
-            <option value="10명 미만">10명 미만</option>
-            <option value="10-50명">10-50명</option>
-            <option value="50-100명">50-100명</option>
-            <option value="100명 이상">100명 이상</option>
-          </select>
-        </div>
-      </fieldset>
+        <!-- 회사 정보 (고용주 전용) -->
+        <fieldset class="employer-only" style="display: none;">
+          <legend>회사 정보</legend>
+          <div class="form-group">
+            <label for="companyName">회사명 *</label>
+            <input type="text" id="companyName" name="companyName" />
+          </div>
+          <div class="form-group">
+            <label for="businessNumber">사업자등록번호</label>
+            <input type="text" id="businessNumber" name="businessNumber" placeholder="000-00-00000"
+              data-translate-placeholder="000-00-00000" />
+          </div>
+          <div class="form-group">
+            <label for="industry">업종 *</label>
+            <select id="industry" name="industry">
+              <option value="">선택하세요</option>
+              <option value="제조업">제조업</option>
+              <option value="건설업">건설업</option>
+              <option value="농축산업">농축산업</option>
+              <option value="어업">어업</option>
+              <option value="서비스업">서비스업</option>
+              <option value="음식업">음식업</option>
+              <option value="소매업">소매업</option>
+              <option value="IT/기술">IT/기술</option>
+              <option value="기타">기타</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="companySize">회사 규모</label>
+            <select id="companySize" name="companySize">
+              <option value="">선택하세요</option>
+              <option value="10명 미만">10명 미만</option>
+              <option value="10-50명">10-50명</option>
+              <option value="50-100명">50-100명</option>
+              <option value="100명 이상">100명 이상</option>
+            </select>
+          </div>
+        </fieldset>
 
-      <!-- 언어 정보 -->
-      <fieldset>
-        <legend>언어 정보</legend>
-        <div class="form-group">
-          <label for="preferredLanguage">선호 UI 언어 *</label>
-          <select id="preferredLanguage" name="preferredLanguage" required>
-            <option value="">선택하세요</option>
-            <option value="한국어">한국어</option>
-            <option value="영어">영어</option>
-            <option value="베트남어">베트남어</option>
-            <option value="중국어">중국어</option>
-            <option value="우즈베크어">우즈베크어</option>
-          </select>
-        </div>
-        <div class="form-group jobseeker-only" style="display: none;">
-          <label for="koreanLevel">한국어 능력</label>
-          <select id="koreanLevel" name="koreanLevel">
-            <option value="">선택하세요</option>
-            <option value="상">상</option>
-            <option value="중">중</option>
-            <option value="하">하</option>
-          </select>
-        </div>
-      </fieldset>
+        <!-- 언어 정보 -->
+        <fieldset>
+          <legend>언어 정보</legend>
+          <div class="form-group">
+            <label for="preferredLanguage">선호 UI 언어 *</label>
+            <select id="preferredLanguage" name="preferredLanguage" required>
+              <option value="">선택하세요</option>
+              <option value="한국어">한국어</option>
+              <option value="영어">영어</option>
+              <option value="베트남어">베트남어</option>
+              <option value="중국어">중국어</option>
+              <option value="우즈베크어">우즈베크어</option>
+            </select>
+          </div>
+          <div class="form-group jobseeker-only" style="display: none;">
+            <label for="koreanLevel">한국어 능력</label>
+            <select id="koreanLevel" name="koreanLevel">
+              <option value="">선택하세요</option>
+              <option value="상">상</option>
+              <option value="중">중</option>
+              <option value="하">하</option>
+            </select>
+          </div>
+        </fieldset>
 
-      <!-- 직무/경력 정보 (구직자 전용) -->
-      <fieldset class="jobseeker-only" style="display: none;">
-        <legend>직무/경력 정보</legend>
-        <div class="form-group">
-          <label for="desiredIndustry">희망 직종/산업군 *</label>
-          <select id="desiredIndustry" name="desiredIndustry" required>
-            <option value="">선택하세요</option>
-            <option value="제조업">제조업</option>
-            <option value="건설업">건설업</option>
-            <option value="농축산업">농축산업</option>
-            <option value="어업">어업</option>
-            <option value="서비스업">서비스업</option>
-            <option value="기타">기타</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="workExperience">직무 경력</label>
-          <textarea id="workExperience" name="workExperience" rows="3"></textarea>
-        </div>
-      </fieldset>
+        <!-- 직무/경력 정보 (구직자 전용) -->
+        <fieldset class="jobseeker-only" style="display: none;">
+          <legend>직무/경력 정보</legend>
+          <div class="form-group">
+            <label for="desiredIndustry">희망 직종/산업군 *</label>
+            <select id="desiredIndustry" name="desiredIndustry" required>
+              <option value="">선택하세요</option>
+              <option value="제조업">제조업</option>
+              <option value="건설업">건설업</option>
+              <option value="농축산업">농축산업</option>
+              <option value="어업">어업</option>
+              <option value="서비스업">서비스업</option>
+              <option value="기타">기타</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="workExperience">직무 경력</label>
+            <textarea id="workExperience" name="workExperience" rows="3"></textarea>
+          </div>
+        </fieldset>
 
-      <button type="submit" class="auth-button">회원가입</button>
-    </form>
-    <p class="auth-link">이미 계정이 있으신가요? <a href="login.html">로그인하기</a></p>
+        <button type="submit" class="auth-button">
+          <i class="fas fa-user-plus"></i>
+          <span data-translate="회원가입">회원가입</span>
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        <p class="auth-link">
+          <span data-translate="이미 계정이 있으신가요?">이미 계정이 있으신가요?</span>
+          <a href="login.html" data-translate="로그인하기">로그인하기</a>
+        </p>
+      </div>
+    </div>
   </div>
 
+  <script src="../js/common.js"></script>
   <script src="../js/translate.js"></script>
   <script src="../js/register.js"></script>
   <script>
