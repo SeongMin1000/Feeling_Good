@@ -472,56 +472,70 @@ function setupPagination() {
 
   if (!pagination) return;
 
+  if (totalPages <= 1) {
+    pagination.innerHTML = '';
+    return;
+  }
+
   let paginationHTML = '';
 
   // 이전 버튼
-  if (currentPage > 1) {
-    paginationHTML += `<button class="page-btn" onclick="changePage(${currentPage - 1})">
+  paginationHTML += `
+    <button class="page-btn nav-btn" onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>
       <i class="fas fa-chevron-left"></i>
-    </button>`;
-  }
+    </button>
+  `;
 
   // 페이지 번호들
-  let startPage = Math.max(1, currentPage - 2);
-  let endPage = Math.min(totalPages, currentPage + 2);
+  const startPage = Math.max(1, currentPage - 2);
+  const endPage = Math.min(totalPages, currentPage + 2);
 
+  // 첫 페이지와 생략 표시
   if (startPage > 1) {
     paginationHTML += `<button class="page-btn" onclick="changePage(1)">1</button>`;
     if (startPage > 2) {
-      paginationHTML += `<span class="page-ellipsis">...</span>`;
+      paginationHTML += `<button class="page-btn ellipsis">...</button>`;
     }
   }
 
+  // 현재 페이지 주변 페이지들
   for (let i = startPage; i <= endPage; i++) {
-    paginationHTML += `<button class="page-btn ${i === currentPage ? 'active' : ''}" 
-      onclick="changePage(${i})">${i}</button>`;
+    paginationHTML += `
+      <button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">
+        ${i}
+      </button>
+    `;
   }
 
+  // 마지막 페이지와 생략 표시
   if (endPage < totalPages) {
     if (endPage < totalPages - 1) {
-      paginationHTML += `<span class="page-ellipsis">...</span>`;
+      paginationHTML += `<button class="page-btn ellipsis">...</button>`;
     }
     paginationHTML += `<button class="page-btn" onclick="changePage(${totalPages})">${totalPages}</button>`;
   }
 
   // 다음 버튼
-  if (currentPage < totalPages) {
-    paginationHTML += `<button class="page-btn" onclick="changePage(${currentPage + 1})">
+  paginationHTML += `
+    <button class="page-btn nav-btn" onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>
       <i class="fas fa-chevron-right"></i>
-    </button>`;
-  }
+    </button>
+  `;
 
   pagination.innerHTML = paginationHTML;
 }
 
 // 페이지 변경
 function changePage(page) {
+  const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
+  if (page < 1 || page > totalPages) return;
+
   currentPage = page;
   renderJobs();
   setupPagination();
 
   // 맨 위로 스크롤
-  document.querySelector('.jobs-container').scrollIntoView({ behavior: 'smooth' });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // 관심 등록/해제

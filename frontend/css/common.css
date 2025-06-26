@@ -375,48 +375,85 @@ body {
     justify-content: center;
     align-items: center;
     gap: 0.5rem;
-    margin-top: 2rem;
-    padding: 2rem 0;
+    margin: 2rem 0;
+    padding: 1.5rem 0;
+    border-top: 1px solid var(--border-color);
 }
 
 .page-btn {
     background: white;
     border: 1px solid var(--border-color);
     color: var(--text-secondary);
-    padding: 0.5rem 0.75rem;
-    border-radius: 5px;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     font-size: 0.9rem;
-    min-width: 40px;
-    height: 40px;
+    font-weight: 500;
+    min-width: 44px;
+    height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
+    text-decoration: none;
+    user-select: none;
 }
 
-.page-btn:hover {
+.page-btn:hover:not(:disabled) {
     background: var(--primary-color);
     color: white;
     border-color: var(--primary-color);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
 }
 
 .page-btn.active {
     background: var(--primary-color);
     color: white;
     border-color: var(--primary-color);
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+    font-weight: 600;
 }
 
 .page-btn:disabled {
-    background: var(--background-light);
-    color: #ccc;
+    background: #f8f9fa;
+    color: #ced4da;
     cursor: not-allowed;
+    border-color: #e9ecef;
+    opacity: 0.6;
 }
 
 .page-btn:disabled:hover {
-    background: var(--background-light);
-    color: #ccc;
-    border-color: var(--border-color);
+    background: #f8f9fa;
+    color: #ced4da;
+    border-color: #e9ecef;
+    transform: none;
+    box-shadow: none;
+}
+
+/* 페이지네이션 내비게이션 버튼 (이전/다음) */
+.page-btn.nav-btn {
+    font-weight: 600;
+    padding: 0.75rem 1.25rem;
+}
+
+.page-btn.nav-btn i {
+    font-size: 0.8rem;
+}
+
+/* 페이지네이션 생략 표시 (...) */
+.page-btn.ellipsis {
+    background: transparent;
+    border: none;
+    cursor: default;
+    color: var(--text-secondary);
+}
+
+.page-btn.ellipsis:hover {
+    background: transparent;
+    color: var(--text-secondary);
+    transform: none;
+    box-shadow: none;
 }
 
 /* 모달 스타일 */
@@ -824,11 +861,19 @@ body {
 
     .pagination {
         flex-wrap: wrap;
+        gap: 0.3rem;
+        padding: 1rem 0;
     }
 
     .page-btn {
-        padding: 0.5rem 1rem;
+        padding: 0.6rem 0.8rem;
         font-size: 0.85rem;
+        min-width: 40px;
+        height: 40px;
+    }
+
+    .page-btn.nav-btn {
+        padding: 0.6rem 1rem;
     }
 
     .footer-content {
